@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rent_budget: MyString
+  buying_budget_1: MyString
+  buying_budget_2: MyString
+
+two:
+  rent_budget: MyString
+  buying_budget_1: MyString
+  buying_budget_2: MyString

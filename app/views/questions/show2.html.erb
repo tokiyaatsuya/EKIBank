@@ -1,8 +1,38 @@
 <h1>Q2</h1>
 <h2>通勤・通学場所と移動の許容時間は？</h2>
 
-<p>#テキストボックスに目的地の最寄駅名を入力</p>
-<p>#セレクトボックス　分以内</p>
+<%= form_for @question, url: show3_questions_path,　method: :get do |f| %>
+  <div class="form-group">
+    <%= f.label :destination_1, '目的地' %>
+    <%= f.text_field :destination_1, :placeholder => '目的地最寄の駅名を入力してください', size: 40, class: 'form-control' %><span>駅</span>
+  </div>
 
-<%= link_to 'NEXT', questions_show3_path %>
-<%= link_to 'BACK', questions_show1_path %>
+  <div class="form-group">
+    <%= f.label :transit_time_1, '移動時間' %>
+    <%= f.select :transit_time_1, {
+      '5分以内': 1,
+      '10分以内': 2,
+      '15分以内': 3,
+      '20分以内': 4,
+      '25分以内': 5,
+      '30分以内': 6,
+      '35分以内': 7,
+      '40分以内': 8,
+      '45分以内': 9,
+      '50分以内': 10,
+      '55分以内': 11,
+      '60分以内': 12,
+      '75分以内': 13,
+      '90分以内': 14,
+      '105分以内': 15,
+      '120分以内': 16,
+    }, { include_blank: '移動時間を選択してください' }, { class: 'form-control' } %>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit 'NEXT', class: 'btn btn-primary btn-block' %>
+  </div>
+  
+<% end %>
+
+<%= link_to 'BACK', :back, class: 'btn btn-primary' %>
