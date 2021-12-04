@@ -1,17 +1,10 @@
 <h1>Q13</h1>
-<h2>駅前に公衆浴場やサウナは必須？</h2>
 
-<%= form_for @question, url: questions_path,　method: :post do |f| %>
-  <div class="form-group">
-    <%= f.select :spa, {
-      '必須': 1,
-      '必須ではない': 2,
-    }, { include_blank: 'どちらか選択してください' }, { class: 'form-control' } %>
-  </div>
-  <div class="form-group">
-    <%= f.submit 'RESULT', class: 'btn btn-primary btn-block' %>
-  </div>
+<%= form_with url: questions_path do |form| %>
+  <%= @question.content %><br>
+  <%= form.collection_select(:answer_id, @answers_17, :id, :content, {prompt: "どちらか選択してください"}) %><br>
+<br>
+  <%= form.submit 'RESULT' %>
 <% end %>
-      
-<%= link_to 'BACK', :back, class: 'btn btn-primary' %>
 
+<%= link_to 'BACK', show12_questions_path %>

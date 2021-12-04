@@ -1,16 +1,10 @@
 <h1>Q4</h1>
-<h2>駅前の雰囲気はどちらが好み？</h2>
 
-<%= form_for @question, url: show5_questions_path,　method: :get do |f| %>
-  <div class="form-group">
-    <%= f.select :station_atmosphere, {
-      '静か': 1,
-      '賑やか': 2,
-    }, { include_blank: 'どちらか選択してください' }, { class: 'form-control' } %>
-  </div>
-  <div class="form-group">
-    <%= f.submit 'NEXT', class: 'btn btn-primary btn-block' %>
-  </div>
+<%= form_with url: show5_questions_path do |form| %>
+  <%= @question.content %><br>
+  <%= form.collection_select(:answer_id, @answers_8, :id, :content, {prompt: "どちらか選択してください"}) %><br>
+<br>
+  <%= form.submit 'NEXT' %>
 <% end %>
 
-<%= link_to 'BACK', :back, class: 'btn btn-primary' %>
+<%= link_to 'BACK', show3_questions_path %>

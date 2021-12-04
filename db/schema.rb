@@ -10,28 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_23_160322) do
+ActiveRecord::Schema.define(version: 2021_12_03_075204) do
 
-  create_table "questions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "rent_budget"
-    t.string "buying_budget_1"
-    t.string "buying_budget_2"
+  create_table "answers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "question_id"
+    t.string "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "destination_1"
-    t.string "transit_time_1"
-    t.text "destination_2"
-    t.string "transit_time_2"
-    t.string "station_atmosphere"
-    t.string "gym"
-    t.string "starbacks_coffee"
-    t.string "mcdonalds"
-    t.string "ohsho"
-    t.string "tabelog_high_score"
-    t.string "supermarket"
-    t.string "large_park"
-    t.string "library"
-    t.string "spa"
+    t.index ["question_id"], name: "index_answers_on_question_id"
+  end
+
+  create_table "questions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -63,4 +55,5 @@ ActiveRecord::Schema.define(version: 2021_11_23_160322) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "answers", "questions"
 end

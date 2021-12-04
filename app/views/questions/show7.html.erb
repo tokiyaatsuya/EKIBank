@@ -1,16 +1,10 @@
 <h1>Q7</h1>
-<h2>駅前にマクドナルドは必須？</h2>
 
-<%= form_for @question, url: show8_questions_path,　method: :get do |f| %>
-  <div class="form-group">
-    <%= f.select :mcdonalds, {
-      '必須': 1,
-      '必須ではない': 2,
-    }, { include_blank: 'どちらか選択してください' }, { class: 'form-control' } %>
-  </div>
-  <div class="form-group">
-    <%= f.submit 'NEXT', class: 'btn btn-primary btn-block' %>
-  </div>
+<%= form_with url: show8_questions_path do |form| %>
+  <%= @question.content %><br>
+  <%= form.collection_select(:answer_id, @answers_11, :id, :content, {prompt: "どちらか選択してください"}) %><br>
+<br>
+  <%= form.submit 'NEXT' %>
 <% end %>
-  
-<%= link_to 'BACK', :back, class: 'btn btn-primary' %>
+
+<%= link_to 'BACK', show6_questions_path %>

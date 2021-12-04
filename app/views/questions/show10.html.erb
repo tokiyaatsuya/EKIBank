@@ -1,16 +1,10 @@
 <h1>Q10</h1>
-<h2>駅前に23時まで営業しているスーパーマーケットは必須？</h2>
 
-<%= form_for @question, url: show11_questions_path,　method: :get do |f| %>
-  <div class="form-group">
-    <%= f.select :supermarket, {
-      '必須': 1,
-      '必須ではない': 2,
-    }, { include_blank: 'どちらか選択してください' }, { class: 'form-control' } %>
-  </div>
-  <div class="form-group">
-    <%= f.submit 'NEXT', class: 'btn btn-primary btn-block' %>
-  </div>
+<%= form_with url: show11_questions_path do |form| %>
+  <%= @question.content %><br>
+  <%= form.collection_select(:answer_id, @answers_14, :id, :content, {prompt: "どちらか選択してください"}) %><br>
+<br>
+  <%= form.submit 'NEXT' %>
 <% end %>
-  
-<%= link_to 'BACK', :back, class: 'btn btn-primary' %>
+
+<%= link_to 'BACK', show9_questions_path %>

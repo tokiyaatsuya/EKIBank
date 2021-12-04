@@ -1,67 +1,14 @@
 <h1>Q1</h1>
-<h2>家賃or購入の予算は？</h2>
 
-<%= form_for @question, url: show2_questions_path, method: :get do |f| %>
-  <div class="form-group">
-    <%= f.label :rent_budget, '家賃の予算' %>
-    <%= f.select :rent_budget, {
-      '5万円台': 1,
-      '6万円台': 2,
-      '7万円台': 3,
-      '8万円台': 4,
-      '9万円台': 5,
-      '10万円台': 6,
-      '11万円台': 7,
-      '12万円台': 8,
-      '13万円台': 9,
-      '14万円台': 10,
-      '15万円台': 11,
-      '16万円台': 12,
-      '17万円台': 13,
-      '18万円台': 14,
-      '19万円台': 15,
-      '20万円台': 16,
-      '21万~25万円': 17,
-      '26万~30万円': 18,
-      '31万~35万円': 19,
-      '36万~40万円': 20,
-      '41万円以上': 21,
-    }, { include_blank: '金額を選択してください' }, { class: 'form-control' } %>
-  </div>
-  
-  <div class="form-group">
-    <%= f.label :buying_budget_1, '購入の種別' %>
-    <%= f.select :buying_budget_1, {
-      '戸建': 1,
-      '土地': 2,
-      'マンション': 3,
-    }, { include_blank: '種別を選択してください' }, { class: 'form-control' } %>
-    <%= f.label :buying_budget_2, '購入の予算' %>
-    <%= f.select :buying_budget_2, {
-      '1000万円以下': 1,
-      '1000~1500万円': 2,
-      '1600~2000万円': 3,
-      '2100~2500万円': 4,
-      '2600~3000万円': 5,
-      '3100~3500万円': 6,
-      '3600~4000万円': 7,
-      '4100~4500万円': 8,
-      '4600~5000万円': 9,
-      '5100~5500万円': 10,
-      '5600~6000万円': 11,
-      '6100~6500万円': 12,
-      '6600~7000万円': 13,
-      '7100~7500万円': 14,
-      '7600~8000万円': 15,
-      '8100~9000万円': 16,
-      '9000~10000万円': 17,
-      '11000~15000万円': 18,
-      '16000~20000万円': 19,
-      '20000万円以上': 20,
-    }, { include_blank: '金額を選択してください' }, { class: 'form-control' } %>
-  </div>
-
-  <div class="form-group">
-    <%= f.submit 'NEXT', class: 'btn btn-primary btn-block' %>
-  </div>
+<%= form_with url: show2_questions_path do |form| %>
+  <%= @questions[0]['content'] %><br>
+  <%= form.collection_select(:answer_id, @answers_1, :id, :content, {prompt: "【賃貸派】家賃の予算を選択してください"}) %><br>
+<br>
+  <%= @questions[1]['content'] %><br>
+  <%= form.collection_select(:answer_id, @answers_2, :id, :content, {prompt: "【購入派】購入予定の不動産の種別を選択してください"}) %><br>
+<br>
+  <%= @questions[2]['content'] %><br>
+  <%= form.collection_select(:answer_id, @answers_3, :id, :content, {prompt: "【購入派】購入予定の不動産の予算を選択してください"}) %><br>
+<br>
+  <%= form.submit 'NEXT' %>
 <% end %>
