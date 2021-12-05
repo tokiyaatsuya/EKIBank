@@ -6,6 +6,23 @@ class ApplicationController < ActionController::Base
     pages_show_path
   end
 
+#質問IDを定数化
+  Q_01 = Answer.where("question_id = 1")
+  Q_02 = Answer.where("question_id = 2")
+  Q_03 = Answer.where("question_id = 3")
+  Q_05 = Answer.where("question_id = 5")
+  Q_07 = Answer.where("question_id = 7")
+  Q_08 = Answer.where("question_id = 8")
+  Q_09 = Answer.where("question_id = 9")
+  Q_10 = Answer.where("question_id = 10")
+  Q_11 = Answer.where("question_id = 11")
+  Q_12 = Answer.where("question_id = 12")
+  Q_13 = Answer.where("question_id = 13")
+  Q_14 = Answer.where("question_id = 14")
+  Q_15 = Answer.where("question_id = 15")
+  Q_16 = Answer.where("question_id = 16")
+  Q_17 = Answer.where("question_id = 17")
+
   private
           
   def sign_in_required
