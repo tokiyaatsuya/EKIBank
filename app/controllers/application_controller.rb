@@ -7,21 +7,21 @@ class ApplicationController < ActionController::Base
   end
 
 #質問IDを定数化
-  Q_01 = "question_id = 1"
-  Q_02 = "question_id = 2"
-  Q_03 = "question_id = 3"
-  Q_05 = "question_id = 5"
-  Q_07 = "question_id = 7"
-  Q_08 = "question_id = 8"
-  Q_09 = "question_id = 9"
-  Q_10 = "question_id = 10"
-  Q_11 = "question_id = 11"
-  Q_12 = "question_id = 12"
-  Q_13 = "question_id = 13"
-  Q_14 = "question_id = 14"
-  Q_15 = "question_id = 15"
-  Q_16 = "question_id = 16"
-  Q_17 = "question_id = 17"
+  Q_01 = 1
+  Q_02 = 2
+  Q_03 = 3
+  Q_05 = 5
+  Q_07 = 7
+  Q_08 = 8
+  Q_09 = 9
+  Q_10 = 10
+  Q_11 = 11
+  Q_12 = 12
+  Q_13 = 13
+  Q_14 = 14
+  Q_15 = 15
+  Q_16 = 16
+  Q_17 = 17
 
   private
           
