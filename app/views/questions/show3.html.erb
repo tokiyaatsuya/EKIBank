@@ -1,0 +1,13 @@
+<h1>Q3</h1>
+
+<%= form_with url: show4_questions_path do |form| %>
+  <%= @questions[0]['content'] %><br>
+  <%= form.text_field :destination_1, :placeholder => '目的地最寄の駅名を入力してください', size: 35, class: 'form-control' %><span>駅</span><br>
+<br>
+  <%= @questions[1]['content'] %><br>
+  <%= form.collection_select(:answer_id, @answers_7, :id, :content, {prompt: "目的駅までの希望する移動時間を選択してください"}) %><br>
+<br>
+  <%= form.submit 'NEXT' %>
+<% end %>
+
+<%= link_to 'BACK', show2_questions_path %>

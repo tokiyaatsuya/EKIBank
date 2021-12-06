@@ -1,0 +1,10 @@
+<h1>Q7</h1>
+
+<%= form_with url: show8_questions_path do |form| %>
+  <%= @question.content %><br>
+  <%= form.collection_select(:answer_id, @answers_11, :id, :content, {prompt: "どちらか選択してください"}) %><br>
+<br>
+  <%= form.submit 'NEXT' %>
+<% end %>
+
+<%= link_to 'BACK', show6_questions_path %>
