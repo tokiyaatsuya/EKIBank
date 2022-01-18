@@ -1,3 +1,4 @@
+Question.create(content: '希望する間取りは？', created_at: now(), updated_at: now())
 Question.create(content: '家賃の予算は？', created_at: now(), updated_at: now())
 Question.create(content: '購入する不動産の種別は？', created_at: now(), updated_at: now())
 Question.create(content: '購入する不動産の予算は？', created_at: now(), updated_at: now())
@@ -112,3 +113,8 @@ Answer.create(question_id: 16, content: '必須', created_at: now(), updated_at:
 Answer.create(question_id: 16, content: '必須ではない', created_at: now(), updated_at: now())
 Answer.create(question_id: 17, content: '必須', created_at: now(), updated_at: now())
 Answer.create(question_id: 17, content: '必須ではない', created_at: now(), updated_at: now())
+Answer.create(question_id: 18, content: 'ワンルーム', created_at: now(), updated_at: now())
+Answer.create(question_id: 18, content: '1K/1DK', created_at: now(), updated_at: now())
+Answer.create(question_id: 18, content: '1LDK/2K/2DK', created_at: now(), updated_at: now())
+Answer.create(question_id: 18, content: '2LDK/3K/3Dk', created_at: now(), updated_at: now())
+Answer.create(question_id: 18, content: '3LDK/4K以上', created_at: now(), updated_at: now())

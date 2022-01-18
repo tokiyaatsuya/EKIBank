@@ -1,10 +1,11 @@
 class QuestionsController < ApplicationController
 
   def show1
-    @questions = Question.find(1,2,3)
+    @questions = Question.find(1,2,3,18)
     @answers_1 = Answer.where(question_id: Q_01)
     @answers_2 = Answer.where(question_id: Q_02)
     @answers_3 = Answer.where(question_id: Q_03)
+    @answers_18 = Answer.where(question_id: Q_18)
   end
 
   def show2
