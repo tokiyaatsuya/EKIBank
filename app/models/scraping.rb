@@ -79,7 +79,7 @@ class Scraping
     # 1駅目のフォームの要素取得と入力
     form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
     # フォーム入力の値はアプリ上でユーザーが入力した情報をインスタンス変数で使用できるようにする
-    @q_1 = '新宿'
+    @q_1 = '東京'
     form_1.send_keys @q_1
     # 1駅目の所要時間のセレクトタグの取得
     time_1 = driver.find_element(:tag_name, 'select')
@@ -94,11 +94,11 @@ class Scraping
     @t_7 = '70分以内'
     @t_8 = '80分以内'
     @t_9 = '90分以内'
-    select_1.select_by(:text, @t_3)
+    select_1.select_by(:text, @t_5)
     # 2駅目のフォームの要素取得と入力
     form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
     # フォーム入力の値はユーザーが入力した情報をインスタンス変数で使用できるようにする
-    @q_2 = '飛田給'
+    @q_2 = '浦和美園'
     form_2.send_keys @q_2
     # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
     time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
@@ -124,71 +124,24 @@ class Scraping
     # 要素を取得してelementに格納できたらケースごとに出力する
     # 該当物件が存在する場合の処理(classの要素で判定)
     if element.attribute('class') == 'paginate_set-hit'
-      # 表示された1ページ目の物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-      infomations_page_1 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-      # 格納された駅情報を順番に表示する
-      infomations_page_1.each do |info|
-        puts "東京 #{info.text}"
-      end
-      # 1ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-      next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "1")or contains(text(), "次へ")]')
-      next_btn.each do |post|
-        # 1ページ目に「次へ」ボタンが存在した処理
-        if post.attribute('text') == '次へ'
-          # 「次へ」ボタンのクリック
-          driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p/a').click
-          # 2ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-          infomations_page_2 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-          # 格納された駅情報を順番に表示する
-          infomations_page_2.each do |info|
-            puts "東京 #{info.text}"
-          end
-          # 2ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-          next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "2")or contains(text(), "次へ")]')
-          next_btn.each do |post|
-            # 2ページ目に「次へ」ボタンが存在した処理
-            if post.attribute('text') == '次へ'
-              driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-              # 3ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-              infomations_page_3 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-              # 格納された駅情報を順番に表示する
-              infomations_page_3.each do |info|
-                puts "東京 #{info.text}"
-              end
-              # 3ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-              next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "3")or contains(text(), "次へ")]')
-              next_btn.each do |post|
-                # 3ページ目に「次へ」ボタンが存在した処理
-                if post.attribute('text') == '次へ'
-                  driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-                  # 4ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-                  infomations_page_4 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-                  # 格納された駅情報を順番に表示する
-                  infomations_page_4.each do |info|
-                    puts "東京 #{info.text}"
-                  end
-                  # 4ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-                  next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "4")or contains(text(), "次へ")]')
-                  next_btn.each do |post|
-                    # 4ページ目に「次へ」ボタンが存在した処理
-                    if post.attribute('text') == '次へ'
-                      driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-                      # 5ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-                      infomations_page_5 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-                      # 格納された駅情報を順番に表示する
-                      infomations_page_5.each do |info|
-                        puts "東京 #{info.text}"
-                      end
-                    end
-                  end
-                end
-              end
-            end
-          end
-        # 検索結果が5ページ未満だった場合の処理
-        elsif post.attribute('text') == ['1','2','3','4']
-          puts "検索結果は以上です"
+      # 5回分のページ遷移が真の間は処理が繰り返されるようにする
+      page = 0
+      while page < 5 do
+        # 表示されたページの物件情報の中から駅情報の要素を取得してinfomations_pageへ格納する
+        infomations_page = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
+        # 格納された駅情報を順に表示する
+        infomations_page.each do |info|
+          puts "東京 #{info.text}"
         end
+        sleep(1)
+        # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
+        if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
+          driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').click
+        # 「次へ」ボタンの要素が存在しない場合はbreakしてループを抜ける
+        else
+          break
+        end
+        page += 1
       end
     # 該当物件が存在しない場合の処理(classの要素で判定)
     elsif element.attribute('class') == 'error_pop-txt'
@@ -210,71 +163,24 @@ class Scraping
     # 要素を取得してelementに格納できたらケースごとに出力する
     # 該当物件が存在する場合の処理(classの要素で判定)
     if element.attribute('class') == 'paginate_set-hit'
-      # 表示された1ページ目の物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-      infomations_page_1 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-      # 格納された駅情報を順番に表示する
-      infomations_page_1.each do |info|
-        puts "神奈川 #{info.text}"
-      end
-      # 1ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-      next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "1")or contains(text(), "次へ")]')
-      next_btn.each do |post|
-        # 1ページ目に「次へ」ボタンが存在した処理
-        if post.attribute('text') == '次へ'
-          # 「次へ」ボタンのクリック
-          driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p/a').click
-          # 2ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-          infomations_page_2 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-          # 格納された駅情報を順番に表示する
-          infomations_page_2.each do |info|
-            puts "神奈川 #{info.text}"
-          end
-          # 2ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-          next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "2")or contains(text(), "次へ")]')
-          next_btn.each do |post|
-            # 2ページ目に「次へ」ボタンが存在した処理
-            if post.attribute('text') == '次へ'
-              driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-              # 3ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-              infomations_page_3 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-              # 格納された駅情報を順番に表示する
-              infomations_page_3.each do |info|
-                puts "神奈川 #{info.text}"
-              end
-              # 3ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-              next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "3")or contains(text(), "次へ")]')
-              next_btn.each do |post|
-                # 3ページ目に「次へ」ボタンが存在した処理
-                if post.attribute('text') == '次へ'
-                  driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-                  # 4ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-                  infomations_page_4 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-                  # 格納された駅情報を順番に表示する
-                  infomations_page_4.each do |info|
-                    puts "神奈川 #{info.text}"
-                  end
-                  # 4ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-                  next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "4")or contains(text(), "次へ")]')
-                  next_btn.each do |post|
-                    # 4ページ目に「次へ」ボタンが存在した処理
-                    if post.attribute('text') == '次へ'
-                      driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-                      # 5ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-                      infomations_page_5 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-                      # 格納された駅情報を順番に表示する
-                      infomations_page_5.each do |info|
-                        puts "神奈川 #{info.text}"
-                      end
-                    end
-                  end
-                end
-              end
-            end
-          end
-        # 検索結果が5ページ未満だった場合の処理
-        elsif post.attribute('text') == ['1','2','3','4']
-          puts "検索結果は以上です"
+      # 5回分のページ遷移が真の間は処理が繰り返されるようにする
+      page = 0
+      while page < 5 do
+        # 表示されたページの物件情報の中から駅情報の要素を取得してinfomations_pageへ格納する
+        infomations_page = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
+        # 格納された駅情報を順に表示する
+        infomations_page.each do |info|
+          puts "神奈川 #{info.text}"
         end
+        sleep(1)
+        # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
+        if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
+          driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').click
+        # 「次へ」ボタンの要素が存在しない場合はbreakしてループを抜ける
+        else
+          break
+        end
+        page += 1
       end
     # 該当物件が存在しない場合の処理(classの要素で判定)
     elsif element.attribute('class') == 'error_pop-txt'
@@ -296,71 +202,24 @@ class Scraping
     # 要素を取得してelementに格納できたらケースごとに出力する
     # 該当物件が存在する場合の処理(classの要素で判定)
     if element.attribute('class') == 'paginate_set-hit'
-      # 表示された1ページ目の物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-      infomations_page_1 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-      # 格納された駅情報を順番に表示する
-      infomations_page_1.each do |info|
-        puts "埼玉 #{info.text}"
-      end
-      # 1ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-      next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "1")or contains(text(), "次へ")]')
-      next_btn.each do |post|
-        # 1ページ目に「次へ」ボタンが存在した処理
-        if post.attribute('text') == '次へ'
-          # 「次へ」ボタンのクリック
-          driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p/a').click
-          # 2ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-          infomations_page_2 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-          # 格納された駅情報を順番に表示する
-          infomations_page_2.each do |info|
-            puts "埼玉 #{info.text}"
-          end
-          # 2ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-          next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "2")or contains(text(), "次へ")]')
-          next_btn.each do |post|
-            # 2ページ目に「次へ」ボタンが存在した処理
-            if post.attribute('text') == '次へ'
-              driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-              # 3ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-              infomations_page_3 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-              # 格納された駅情報を順番に表示する
-              infomations_page_3.each do |info|
-                puts "埼玉 #{info.text}"
-              end
-              # 3ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-              next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "3")or contains(text(), "次へ")]')
-              next_btn.each do |post|
-                # 3ページ目に「次へ」ボタンが存在した処理
-                if post.attribute('text') == '次へ'
-                  driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-                  # 4ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-                  infomations_page_4 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-                  # 格納された駅情報を順番に表示する
-                  infomations_page_4.each do |info|
-                    puts "埼玉 #{info.text}"
-                  end
-                  # 4ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-                  next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "4")or contains(text(), "次へ")]')
-                  next_btn.each do |post|
-                    # 4ページ目に「次へ」ボタンが存在した処理
-                    if post.attribute('text') == '次へ'
-                      driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-                      # 5ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-                      infomations_page_5 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-                      # 格納された駅情報を順番に表示する
-                      infomations_page_5.each do |info|
-                        puts "埼玉 #{info.text}"
-                      end
-                    end
-                  end
-                end
-              end
-            end
-          end
-        # 検索結果が5ページ未満だった場合の処理
-        elsif post.attribute('text') == ['1','2','3','4']
-          puts "検索結果は以上です"
+      # 5回分のページ遷移が真の間は処理が繰り返されるようにする
+      page = 0
+      while page < 5 do
+        # 表示されたページの物件情報の中から駅情報の要素を取得してinfomations_pageへ格納する
+        infomations_page = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
+        # 格納された駅情報を順に表示する
+        infomations_page.each do |info|
+          puts "埼玉 #{info.text}"
         end
+        sleep(1)
+        # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
+        if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
+          driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').click
+        # 「次へ」ボタンの要素が存在しない場合はbreakしてループを抜ける
+        else
+          break
+        end
+        page += 1
       end
     # 該当物件が存在しない場合の処理(classの要素で判定)
     elsif element.attribute('class') == 'error_pop-txt'
@@ -382,71 +241,24 @@ class Scraping
     # 要素を取得してelementに格納できたらケースごとに出力する
     # 該当物件が存在する場合の処理(classの要素で判定)
     if element.attribute('class') == 'paginate_set-hit'
-      # 表示された1ページ目の物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-      infomations_page_1 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-      # 格納された駅情報を順番に表示する
-      infomations_page_1.each do |info|
-        puts "千葉 #{info.text}"
-      end
-      # 1ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-      next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "1")or contains(text(), "次へ")]')
-      next_btn.each do |post|
-        # 1ページ目に「次へ」ボタンが存在した処理
-        if post.attribute('text') == '次へ'
-          # 「次へ」ボタンのクリック
-          driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p/a').click
-          # 2ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-          infomations_page_2 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-          # 格納された駅情報を順番に表示する
-          infomations_page_2.each do |info|
-            puts "千葉 #{info.text}"
-          end
-          # 2ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-          next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "2")or contains(text(), "次へ")]')
-          next_btn.each do |post|
-            # 2ページ目に「次へ」ボタンが存在した処理
-            if post.attribute('text') == '次へ'
-              driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-              # 3ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-              infomations_page_3 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-              # 格納された駅情報を順番に表示する
-              infomations_page_3.each do |info|
-                puts "千葉 #{info.text}"
-              end
-              # 3ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-              next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "3")or contains(text(), "次へ")]')
-              next_btn.each do |post|
-                # 3ページ目に「次へ」ボタンが存在した処理
-                if post.attribute('text') == '次へ'
-                  driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-                  # 4ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-                  infomations_page_4 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-                  # 格納された駅情報を順番に表示する
-                  infomations_page_4.each do |info|
-                    puts "千葉 #{info.text}"
-                  end
-                  # 4ページ目下部に「次へ」ボタンの要素が存在すれば取得してクリックする。もし存在せず現在のページで終わりであれば現在のページの数字を取得する
-                  next_btn = driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "4")or contains(text(), "次へ")]')
-                  next_btn.each do |post|
-                    # 4ページ目に「次へ」ボタンが存在した処理
-                    if post.attribute('text') == '次へ'
-                      driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]/p[2]/a').click
-                      # 5ページ目に移動して表示された物件情報の中から駅情報の要素を取得してinfomationsへ格納する
-                      infomations_page_5 = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
-                      # 格納された駅情報を順番に表示する
-                      infomations_page_5.each do |info|
-                        puts "千葉 #{info.text}"
-                      end
-                    end
-                  end
-                end
-              end
-            end
-          end
-        # 検索結果が5ページ未満だった場合の処理
-        elsif post.attribute('text') == ['1','2','3','4']
-          puts "検索結果は以上です"
+      # 5回分のページ遷移が真の間は処理が繰り返されるようにする
+      page = 0
+      while page < 5 do
+        # 表示されたページの物件情報の中から駅情報の要素を取得してinfomations_pageへ格納する
+        infomations_page = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
+        # 格納された駅情報を順に表示する
+        infomations_page.each do |info|
+          puts "千葉 #{info.text}"
         end
+        sleep(1)
+        # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
+        if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
+          driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').click
+        # 「次へ」ボタンの要素が存在しない場合はbreakしてループを抜ける
+        else
+          break
+        end
+        page += 1
       end
     # 該当物件が存在しない場合の処理(classの要素で判定)
     elsif element.attribute('class') == 'error_pop-txt'
