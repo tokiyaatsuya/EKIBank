@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  # Scrapingファイルの読み込み
+  require './app/models/scraping'
 
   def show1
     # questionsテーブルからid:1,2,3,18を取得(18は追加項目なので飛び番号)

@@ -1,16 +1,12 @@
 require 'selenium-webdriver'
 
-# xpathの要素取得について "//*" とする事でtbody以降全てのnodeを対象にする
-# hrefタグに特定の文字列が含まれる要素の指定 => [contains(@href, "tokyo")]
-# コンソールにリンクのテキスト名を表示させる
-  #elements.each do |element|
-  #  puts element.text
-  #end
-
 class Scraping
   def self.click_rent_market_price
+    # option設定(スクレイピングブラウザの非表示)
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
     # Seleniumの起動
-    driver = Selenium::WebDriver.for :chrome
+    driver = Selenium::WebDriver.for :chrome#, options: options
     # 最初の遷移先の指定
     driver.get "https://suumo.jp/chintai/soba/"
     # 一都三県の家賃相場を調べる為に空の配列を用意
@@ -33,35 +29,46 @@ class Scraping
         # 格納された各沿線のhrefに対して順番に遷移を繰り返す
         urls.each do |url|
           driver.get(url)
-          # 間取りの選択はアプリ上のユーザーの選択した情報をインスタンス変数で使用できるようにする
-          @madori_1 = '//*[@id="souba_madori-oneroom"]'
-          @madori_2 = '//*[@id="souba_madori-1K/1DK"]'
-          @madori_3 = '//*[@id="souba_madori-1LDK/2K/2DK"]'
-          @madori_4 = '//*[@id="souba_madori-2LDK/3K/3DK"]'
-          @madori_5 = '//*[@id="souba_madori-3LDK/4K"]'
-          # 間取りごとにラジオボタンの要素を取得してクリック
-          driver.find_element(:xpath, @madori_1).click
-          sleep(1)
-          # 間取りボタンをクリック後に更新ボタンをクリック
-          submit_btn = '//*[@id="js-graphpanel-form"]/div/div[2]/div/div[1]/a'
-          driver.find_element(:xpath, submit_btn).click
-          sleep(1)
-          driver.find_element(:xpath, @madori_2).click
-          sleep(1)
-          driver.find_element(:xpath, submit_btn).click
-          sleep(1)
-          driver.find_element(:xpath, @madori_3).click
-          sleep(1)
-          driver.find_element(:xpath, submit_btn).click
-          sleep(1)
-          driver.find_element(:xpath, @madori_4).click
-          sleep(1)
-          driver.find_element(:xpath, submit_btn).click
-          sleep(1)
-          driver.find_element(:xpath, @madori_5).click
-          sleep(1)
-          driver.find_element(:xpath, submit_btn).click
-          sleep(1)
+          # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りはワンルーム)
+          infomations = driver.find_elements(:xpath, '//*[@id="js-graphpanel-campus"]/table/tbody//*[contains(@href, "soba")or contains(@class, "graphpanel_matrix-td_graphinfo-strong")]')
+          infomations.each do |info|
+            puts info.text
+          end
+          # 次の間取りのボタンの要素を取得してクリック
+          driver.find_element(:xpath, '//*[@id="souba_madori-1K/1DK"]').click
+          # 次の間取りを選択しクリックしたら情報反映のために更新ボタンの要素を取得してクリック
+          driver.find_element(:xpath, '//*[@id="js-graphpanel-form"]/div/div[2]/div/div[1]/a').click
+          # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りは1K/1DK)
+          infomations = driver.find_elements(:xpath, '//*[@id="js-graphpanel-campus"]/table/tbody//*[contains(@href, "soba")or contains(@class, "graphpanel_matrix-td_graphinfo-strong")]')
+          infomations.each do |info|
+            puts info.text
+          end
+          # 次の間取りのボタンの要素を取得してクリック
+          driver.find_element(:xpath, '//*[@id="souba_madori-1LDK/2K/2DK"]').click
+          # 次の間取りを選択しクリックしたら情報反映のために更新ボタンの要素を取得してクリック
+          driver.find_element(:xpath, '//*[@id="js-graphpanel-form"]/div/div[2]/div/div[1]/a').click
+          # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りは1LDK/2K/2DK)
+          infomations = driver.find_elements(:xpath, '//*[@id="js-graphpanel-campus"]/table/tbody//*[contains(@href, "soba")or contains(@class, "graphpanel_matrix-td_graphinfo-strong")]')
+          infomations.each do |info|
+            puts info.text
+          end
+          # 次の間取りのボタンの要素を取得してクリック
+          driver.find_element(:xpath, '//*[@id="souba_madori-2LDK/3K/3DK"]').click
+          # 次の間取りを選択しクリックしたら情報反映のために更新ボタンの要素を取得してクリック
+          driver.find_element(:xpath, '//*[@id="js-graphpanel-form"]/div/div[2]/div/div[1]/a').click
+          # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りは2LDK/3K/3DK)
+          infomations = driver.find_elements(:xpath, '//*[@id="js-graphpanel-campus"]/table/tbody//*[contains(@href, "soba")or contains(@class, "graphpanel_matrix-td_graphinfo-strong")]')
+          infomations.each do |info|
+            puts info.text
+          end
+          driver.find_element(:xpath, '//*[@id="souba_madori-3LDK/4K"]').click
+          # 次の間取りを選択しクリックしたら情報反映のために更新ボタンの要素を取得してクリック
+          driver.find_element(:xpath, '//*[@id="js-graphpanel-form"]/div/div[2]/div/div[1]/a').click
+          # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りは3LDK/4K~)
+          infomations = driver.find_elements(:xpath, '//*[@id="js-graphpanel-campus"]/table/tbody//*[contains(@href, "soba")or contains(@class, "graphpanel_matrix-td_graphinfo-strong")]')
+          infomations.each do |info|
+            puts info.text
+          end
         end
       end
     else
@@ -70,8 +77,11 @@ class Scraping
   end
 
   def self.search_by_transit_time
-    # seleniumの起動
-    driver = Selenium::WebDriver.for :chrome
+    # option設定(スクレイピングブラウザの非表示)
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
+    # Seleniumの起動
+    driver = Selenium::WebDriver.for :chrome#, options: options
     # 最初の遷移先の指定(東京クリック編)
     driver.get "https://suumo.jp/jj/chintai/kensaku/FR301FB005/?ar=030&bs=040"
     # 今回は目的地を２駅設定したいので最初に「駅を追加する」のボタン要素を取得してクリックする
@@ -103,16 +113,7 @@ class Scraping
     # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
     time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
     select_2 = Selenium::WebDriver::Support::Select.new(time_2)
-    @tt_1 = '10分以内'
-    @tt_2 = '20分以内'
-    @tt_3 = '30分以内'
-    @tt_4 = '40分以内'
-    @tt_5 = '50分以内'
-    @tt_6 = '60分以内'
-    @tt_7 = '70分以内'
-    @tt_8 = '80分以内'
-    @tt_9 = '90分以内'
-    select_2.select_by(:text, @tt_1)
+    select_2.select_by(:text, @t_1)
     # 「住みたいエリア」を順に東京をクリック
     driver.find_element(:xpath, '//*[@id="ta13"]').click
     # submitボタンの要素取得と実行(検索開始)

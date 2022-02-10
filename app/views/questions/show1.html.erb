@@ -1,19 +1,19 @@
 <h1>Q1</h1>
 
 <%= form_with url: show2_questions_path do |form| %>
-<p>賃貸派</p>
-  <%= @questions[3]['content'] %><br>
-  <%= form.collection_select(:answer_id, @answers_18, :id, :content, {prompt: "希望する間取りを選択してください"}) %><br>
-<br>
-  <%= @questions[0]['content'] %><br>
-  <%= form.collection_select(:answer_id, @answers_1, :id, :content, {prompt: "家賃の予算を選択してください"}) %><br>
-<br>
-<p>購入派</p>
-  <%= @questions[1]['content'] %><br>
-  <%= form.collection_select(:answer_id, @answers_2, :id, :content, {prompt: "購入予定の不動産の種別を選択してください"}) %><br>
-<br>
-  <%= @questions[2]['content'] %><br>
-  <%= form.collection_select(:answer_id, @answers_3, :id, :content, {prompt: "購入予定の不動産の予算を選択してください"}) %><br>
-<br>
-  <%= form.submit 'NEXT' %>
+  <p>賃貸派</p>
+    <%= @questions[3]['content'] %><br>
+    <%= form.collection_select(:answer_id, @answers_18, :id, :content, {prompt: "希望する間取りを選択してください"}) %><br>
+  <br>
+    <%= @questions[0]['content'] %><br>
+    <%= form.collection_select(:answer_id, @answers_1, :id, :content, {prompt: "家賃の予算を選択してください"}) %><br>
+  <br>
+  <p>購入派</p>
+    <%= @questions[1]['content'] %><br>
+    <%= form.collection_select(:answer_id, @answers_2, :id, :content, {prompt: "購入予定の不動産の種別を選択してください"}) %><br>
+  <br>
+    <%= @questions[2]['content'] %><br>
+    <%= form.collection_select(:answer_id, @answers_3, :id, :content, {prompt: "購入予定の不動産の予算を選択してください"}) %><br>
+  <br>
+    <%= form.submit 'NEXT' %>
 <% end %>
