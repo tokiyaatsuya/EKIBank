@@ -57,3 +57,11 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'devise'
+
+gem 'mechanize'
+
+gem 'webdrivers'
+
+gem 'whenever', require: false
+
+gem 'pry-rails'

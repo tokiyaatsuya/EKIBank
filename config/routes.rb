@@ -31,7 +31,7 @@ Rails.application.routes.draw do
       get 'show13'
       post 'show13', to: 'questions#show13'
       get 'answer/show'
-      post 'answers/show', to: 'answers#show'
+      post 'answer/show', to: 'answers#show'
     end
   end
 end

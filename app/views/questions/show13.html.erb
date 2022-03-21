@@ -1,6 +1,6 @@
 <h1>Q13</h1>
 
-<%= form_with url: questions_path do |form| %>
+<%= form_with url: answer_show_questions_path do |form| %>
   <%= @question.content %><br>
   <%= form.collection_select(:answer_id, @answers_17, :id, :content, {prompt: "どちらか選択してください"}) %><br>
 <br>
