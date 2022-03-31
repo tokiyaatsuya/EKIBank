@@ -1,16 +1,24 @@
 <h1>結果発表</h1>
-
-
-
-
-
-
-
-
-
-
-
-<%= @answers %>
+<!--確認用(ユーザーが入力したパラメーターの内容を表示)-->
+<%= @rent_budget %>
+<%= @floor_plan %>
+<%= @destination_1 %>
+<%= @transit_time_1 %>
+<%= @destination_2 %>
+<%= @transit_time_2 %>
+<%= @prefecture_to_live %>
+<%= @station_atmosphere %>
+<%= @gym %>
+<%= @starbucks_coffee %>
+<%= @mcdonalds %>
+<%= @ohsho %>
+<%= @tabelog %>
+<%= @supermarket %>
+<%= @large_park %>
+<%= @library %>
+<%= @spa %>
+<!--確認用(ユーザーが入力したdestination、transit_timeの内容からスクレイピングを行った結果の駅名の表示)-->
+<%= $candidate_station %>
 
 <h2>あなたにオススメは〇〇線〇〇駅です！</h2>
 <p>#Google map表示</p>

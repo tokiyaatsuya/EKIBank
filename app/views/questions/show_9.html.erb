@@ -1,0 +1,12 @@
+<h1>Q9</h1>
+<!--フォームに入力されたデータをDBへ保存しないので次の遷移ページにurlのパスを指定する-->
+<%= form_with url: show_10_questions_path do |form| %>
+  <!--questions_controllerで設定した@questions = Question.find(12)のcontentを表示する-->
+  <%= @question.content %><br>
+  <!--:ohshoはformで渡すデータのnameを指定する。@answers_12にはAnswer.where(question_id: Q_12)が格納されている-->
+  <%= form.collection_select(:ohsho, @answers_12, :content, :content, {prompt: "どちらか選択してください"}) %><br>
+<br>
+  <%= form.submit 'NEXT' %>
+<% end %>
+
+<%= link_to 'BACK', show_8_questions_path %>
