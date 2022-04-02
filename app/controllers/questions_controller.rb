@@ -146,8 +146,8 @@ class QuestionsController < ApplicationController
     params.permit(
       :rent_budget,
       :floor_plan,
-      :buy_type,
-      :buy_budget,
+      #:buy_type,
+      #:buy_budget,
       :destination_1,
       :transit_time_1,
       :destination_2,

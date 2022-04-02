@@ -4,7 +4,7 @@
   <!--questions_controllerで設定した@questions = Question.find(14)のcontentを表示する-->
   <%= @question.content %><br>
   <!--:supermarketはformで渡すデータのnameを指定する。@answers_14にはAnswer.where(question_id: Q_14)が格納されている-->
-  <%= form.collection_select(:supermarket, @answers_14, :content, :content, {prompt: "どちらか選択してください"}) %><br>
+  <%= form.collection_select(:supermarket, @answers_14, :content, :content, {prompt: "どちらか選択してください"}, required: true) %><br>
 <br>
   <%= form.submit 'NEXT' %>
 <% end %>
