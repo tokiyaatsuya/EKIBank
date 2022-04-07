@@ -6,7 +6,7 @@
   <!--:tabelogはformで渡すデータのnameを指定する。@answers_13にはAnswer.where(question_id: Q_13)が格納されている-->
   <%= form.collection_select(:tabelog, @answers_13, :content, :content, {prompt: "どちらか選択してください"}, required: true) %><br>
 <br>
-  <%= form.submit 'NEXT' %>
+  <%= form.submit 'NEXT', class: "btn btn-primary" %>
 <% end %>
 
 <%= link_to 'BACK', show_9_questions_path %>

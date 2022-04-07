@@ -11,7 +11,7 @@
   <!--:transit_time_2はformで渡すデータのnameを指定する。@answers_7にはAnswer.where(question_id: Q_07)が格納されている-->
   <%= form.collection_select(:transit_time_2, @answers_7, :content, :content, {prompt: "目的駅までの希望する移動時間を選択してください"}, required: true) %><br>
 <br>
-  <%= form.submit 'NEXT' %>
+  <%= form.submit 'NEXT', class: "btn btn-primary" %>
 <% end %>
 
 <%= link_to 'BACK', show_2_questions_path %>

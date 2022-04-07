@@ -197,7 +197,7 @@ class RentMarketPrice < ApplicationRecord
   # xpathで要素を指定する間取りの更新ボタン
   @submit_btn = '//*[@id="js-graphpanel-form"]/div/div[2]/div/div[1]/a'
 
-  # 各沿線ごとの駅情報を取得しDBへ保存するメソッド
+  # 各沿線ごとの駅情報を取得しDBへ保存するメソッド(合計：170路線)
   # 東京都
   def self.yamanotesen_tokyo #山手線
     # get_station_infomationメソッド内に設置した@prefectureに一都三県の要素を代入する

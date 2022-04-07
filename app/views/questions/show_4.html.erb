@@ -6,7 +6,7 @@
   <!--:prefecture_to_liveはformで渡すデータのnameを指定する。@answers_19にはAnswer.where(question_id: Q_19)が格納されている-->
   <%= form.collection_select(:prefecture_to_live, @answers_19, :content, :content, {prompt: "住みたいエリアを選択してください"}, required: true) %><br>
 <br>
-  <%= form.submit 'NEXT' %>
+  <%= form.submit 'NEXT', class: "btn btn-primary" %>
 <% end %>
 
 <%= link_to 'BACK', show_3_questions_path %>
