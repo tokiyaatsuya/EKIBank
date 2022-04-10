@@ -2480,11 +2480,11 @@ class RentMarketPrice < ApplicationRecord
   # 駅追加ボタン
   @add_station_btn = '//*[@id="js-timePanel-addStationBtn"]/a'
   # 目的地(駅)
-  # @destination_1 = '渋谷' #動作確認用
-  # @destination_2 = '武蔵中原' #動作確認用
+  # $destination_1 = '渋谷' #動作確認用
+  # $destination_2 = '武蔵中原' #動作確認用
   # 所要時間
-  # @transit_time_1 = '30分以内' #動作確認用
-  # @transit_time_2 = '10分以内' #動作確認用
+  # $transit_time_1 = '20分以内' #動作確認用
+  # $transit_time_2 = '10分以内' #動作確認用
   # 「住みたいエリア」ボタン
   @tokyo_btn = '//*[@id="ta13"]'
   @kanagawa_btn = '//*[@id="ta14"]'
@@ -2511,6 +2511,9 @@ class RentMarketPrice < ApplicationRecord
       form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
       # フォーム入力の値はアプリ上でユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
       form_1.send_keys $destination_1
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_1.clear
+      form_1.send_keys $destination_1
       # 1駅目の所要時間のセレクトタグの取得
       time_1 = driver.find_element(:tag_name, 'select')
       select_1 = Selenium::WebDriver::Support::Select.new(time_1)
@@ -2519,6 +2522,9 @@ class RentMarketPrice < ApplicationRecord
       # 2駅目のフォームの要素取得と入力
       form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
       # フォーム入力の値はユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_2.send_keys $destination_2
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_2.clear
       form_2.send_keys $destination_2
       # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
       time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
@@ -2531,8 +2537,9 @@ class RentMarketPrice < ApplicationRecord
       driver.find_element(:xpath, @search_start_btn).click
       # 検索結果の表示(駅情報を頭2ページ分のみ取得する)
       # 検索結果のページに該当物件の件数の要素(paginate_set-hit)もしくは該当物件が存在しない場合の要素(error_pop-txt)のいずれかにヒットする要素を取得する
-      element = driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")]')
+      element = driver.find_element(:xpath, '/html/body//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")or contains(@class, "errorbox")]')
       wait.until {element.displayed?}
+      sleep(1)
       # 要素を取得してelementに格納できたらケースごとに出力する
       # 該当物件が存在する場合の処理(classの要素で判定)
       if element.attribute('class') == 'paginate_set-hit'
@@ -2554,6 +2561,8 @@ class RentMarketPrice < ApplicationRecord
             next if b.nil?
             # 最終的に取り出した駅名要素を$candidate_stationに格納していきcontrollerで読み込めるようにする
             $candidate_station << info.text.slice(a+1..b-1)
+            # 動作確認用
+            # puts $candidate_station
           end
           # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
           if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
@@ -2567,8 +2576,16 @@ class RentMarketPrice < ApplicationRecord
       # 該当物件が存在しない場合の処理(classの要素で判定)
       elsif element.attribute('class') == 'error_pop-txt'
         $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      elsif element.attribute('class') == 'errorbox'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
       else
-        puts 'ERROR!!'
+        $candidate_station = "想定外のエラーが起きています！！"
+        # 動作確認用
+        # puts $candidate_station
       end
     rescue
       # 例外処理、beginの処理が成功しなければリトライを行う
@@ -2594,6 +2611,9 @@ class RentMarketPrice < ApplicationRecord
       form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
       # フォーム入力の値はアプリ上でユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
       form_1.send_keys $destination_1
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_1.clear
+      form_1.send_keys $destination_1
       # 1駅目の所要時間のセレクトタグの取得
       time_1 = driver.find_element(:tag_name, 'select')
       select_1 = Selenium::WebDriver::Support::Select.new(time_1)
@@ -2602,6 +2622,9 @@ class RentMarketPrice < ApplicationRecord
       # 2駅目のフォームの要素取得と入力
       form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
       # フォーム入力の値はユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_2.send_keys $destination_2
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_2.clear
       form_2.send_keys $destination_2
       # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
       time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
@@ -2614,8 +2637,9 @@ class RentMarketPrice < ApplicationRecord
       driver.find_element(:xpath, @search_start_btn).click
       # 検索結果の表示(駅情報を頭2ページ分のみ取得する)
       # 検索結果のページに該当物件の件数の要素(paginate_set-hit)もしくは該当物件が存在しない場合の要素(error_pop-txt)のいずれかにヒットする要素を取得する
-      element = driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")]')
+      element = driver.find_element(:xpath, '/html/body//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")or contains(@class, "errorbox")]')
       wait.until {element.displayed?}
+      sleep(1)
       # 要素を取得してelementに格納できたらケースごとに出力する
       # 該当物件が存在する場合の処理(classの要素で判定)
       if element.attribute('class') == 'paginate_set-hit'
@@ -2637,6 +2661,8 @@ class RentMarketPrice < ApplicationRecord
             next if b.nil?
             # 最終的に取り出した駅名要素を$candidate_stationに格納していきcontrollerで読み込めるようにする
             $candidate_station << info.text.slice(a+1..b-1)
+            # 動作確認用
+            # puts $candidate_station
           end
           # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
           if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
@@ -2650,8 +2676,16 @@ class RentMarketPrice < ApplicationRecord
       # 該当物件が存在しない場合の処理(classの要素で判定)
       elsif element.attribute('class') == 'error_pop-txt'
         $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      elsif element.attribute('class') == 'errorbox'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
       else
-        puts 'ERROR!!'
+        $candidate_station = "想定外のエラーが起きています！！"
+        # 動作確認用
+        # puts $candidate_station
       end
     rescue
       # 例外処理、beginの処理が成功しなければリトライを行う
@@ -2677,6 +2711,9 @@ class RentMarketPrice < ApplicationRecord
       form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
       # フォーム入力の値はアプリ上でユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
       form_1.send_keys $destination_1
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_1.clear
+      form_1.send_keys $destination_1
       # 1駅目の所要時間のセレクトタグの取得
       time_1 = driver.find_element(:tag_name, 'select')
       select_1 = Selenium::WebDriver::Support::Select.new(time_1)
@@ -2685,6 +2722,9 @@ class RentMarketPrice < ApplicationRecord
       # 2駅目のフォームの要素取得と入力
       form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
       # フォーム入力の値はユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_2.send_keys $destination_2
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_2.clear
       form_2.send_keys $destination_2
       # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
       time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
@@ -2697,8 +2737,9 @@ class RentMarketPrice < ApplicationRecord
       driver.find_element(:xpath, @search_start_btn).click
       # 検索結果の表示(駅情報を頭2ページ分のみ取得する)
       # 検索結果のページに該当物件の件数の要素(paginate_set-hit)もしくは該当物件が存在しない場合の要素(error_pop-txt)のいずれかにヒットする要素を取得する
-      element = driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")]')
+      element = driver.find_element(:xpath, '/html/body//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")or contains(@class, "errorbox")]')
       wait.until {element.displayed?}
+      sleep(1)
       # 要素を取得してelementに格納できたらケースごとに出力する
       # 該当物件が存在する場合の処理(classの要素で判定)
       if element.attribute('class') == 'paginate_set-hit'
@@ -2720,6 +2761,8 @@ class RentMarketPrice < ApplicationRecord
             next if b.nil?
             # 最終的に取り出した駅名要素を$candidate_stationに格納していきcontrollerで読み込めるようにする
             $candidate_station << info.text.slice(a+1..b-1)
+            # 動作確認用
+            # puts $candidate_station
           end
           # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
           if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
@@ -2733,8 +2776,16 @@ class RentMarketPrice < ApplicationRecord
       # 該当物件が存在しない場合の処理(classの要素で判定)
       elsif element.attribute('class') == 'error_pop-txt'
         $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      elsif element.attribute('class') == 'errorbox'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
       else
-        puts 'ERROR!!'
+        $candidate_station = "想定外のエラーが起きています！！"
+        # 動作確認用
+        # puts $candidate_station
       end
     rescue
       # 例外処理、beginの処理が成功しなければリトライを行う
@@ -2760,6 +2811,9 @@ class RentMarketPrice < ApplicationRecord
       form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
       # フォーム入力の値はアプリ上でユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
       form_1.send_keys $destination_1
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_1.clear
+      form_1.send_keys $destination_1
       # 1駅目の所要時間のセレクトタグの取得
       time_1 = driver.find_element(:tag_name, 'select')
       select_1 = Selenium::WebDriver::Support::Select.new(time_1)
@@ -2768,6 +2822,9 @@ class RentMarketPrice < ApplicationRecord
       # 2駅目のフォームの要素取得と入力
       form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
       # フォーム入力の値はユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_2.send_keys $destination_2
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_2.clear
       form_2.send_keys $destination_2
       # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
       time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
@@ -2780,8 +2837,9 @@ class RentMarketPrice < ApplicationRecord
       driver.find_element(:xpath, @search_start_btn).click
       # 検索結果の表示(駅情報を頭2ページ分のみ取得する)
       # 検索結果のページに該当物件の件数の要素(paginate_set-hit)もしくは該当物件が存在しない場合の要素(error_pop-txt)のいずれかにヒットする要素を取得する
-      element = driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")]')
+      element = driver.find_element(:xpath, '/html/body//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")or contains(@class, "errorbox")]')
       wait.until {element.displayed?}
+      sleep(1)
       # 要素を取得してelementに格納できたらケースごとに出力する
       # 該当物件が存在する場合の処理(classの要素で判定)
       if element.attribute('class') == 'paginate_set-hit'
@@ -2803,6 +2861,8 @@ class RentMarketPrice < ApplicationRecord
             next if b.nil?
             # 最終的に取り出した駅名要素を$candidate_stationに格納していきcontrollerで読み込めるようにする
             $candidate_station << info.text.slice(a+1..b-1)
+            # 動作確認用
+            # puts $candidate_station
           end
           # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
           if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
@@ -2816,8 +2876,16 @@ class RentMarketPrice < ApplicationRecord
       # 該当物件が存在しない場合の処理(classの要素で判定)
       elsif element.attribute('class') == 'error_pop-txt'
         $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      elsif element.attribute('class') == 'errorbox'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
       else
-        puts 'ERROR!!'
+        $candidate_station = "想定外のエラーが起きています！！"
+        # 動作確認用
+        # puts $candidate_station
       end
     rescue
       # 例外処理、beginの処理が成功しなければリトライを行う

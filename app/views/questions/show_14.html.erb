@@ -7,8 +7,6 @@
   <%= form.collection_select(:spa, @answers_17, :content, :content, {prompt: "どちらか選択してください"}, required: true) %><br>
 <br>
   <%= form.submit 'RESULT', id: "btn", class: "btn btn-success", data: {disable_with: false} %>
-  <!--以下jQueryの動作確認用-->
-  <p id="test">jQuery赤色？</p>
 <% end %>
 
 <%= link_to 'BACK', show_13_questions_path %>
