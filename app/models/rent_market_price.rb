@@ -1,7 +1,9 @@
 class RentMarketPrice < ApplicationRecord
+  validates :station_name, uniqueness: { scope: :floor_plan }
   enum floor_plan: { "ワンルーム": 0, "1K/1DK": 1, "1LDK/2K/2DK": 2, "2LDK/3K/3DK": 3, "3LDK/4K~": 4 }
   require 'selenium-webdriver'
   require 'webdrivers'
+  attr_reader :destination_1, :destination_2, :transit_time_1, :transit_time_2
 
   # 変数の定義
   # 各一都三県が保有する沿線一覧のリンク先
@@ -195,7 +197,7 @@ class RentMarketPrice < ApplicationRecord
   # xpathで要素を指定する間取りの更新ボタン
   @submit_btn = '//*[@id="js-graphpanel-form"]/div/div[2]/div/div[1]/a'
 
-  # 各沿線ごとの駅情報を取得しDBへ保存するメソッド
+  # 各沿線ごとの駅情報を取得しDBへ保存するメソッド(合計：170路線)
   # 東京都
   def self.yamanotesen_tokyo #山手線
     # get_station_infomationメソッド内に設置した@prefectureに一都三県の要素を代入する
@@ -2459,7 +2461,7 @@ class RentMarketPrice < ApplicationRecord
     end
   end
 
-  # ループで回すinfo.textの中身を文字列or数値(小数)を判定するためのメソッド
+  # get_station_infomationメソッド内でループを回すinfo.textの中身(文字列or数値(小数))を判定するためのメソッド
   def self.integer_string?(str)
     # 受け取ったパラメータ(文字列)をto_fメソッドで10進数表現と解釈して浮動小数点(Float)に変換する
     value = str.to_f
@@ -2468,6 +2470,426 @@ class RentMarketPrice < ApplicationRecord
       return false
     else
       return true
+    end
+  end
+
+
+
+  # 以下、ユーザーのアプリ操作に合わせた「目的地(駅)」「所要時間」「住みたいエリア」をスクレイピングで操作するメソッド
+  # 変数化
+  # 駅追加ボタン
+  @add_station_btn = '//*[@id="js-timePanel-addStationBtn"]/a'
+  # 目的地(駅)
+  # $destination_1 = '渋谷' #動作確認用
+  # $destination_2 = '武蔵中原' #動作確認用
+  # 所要時間
+  # $transit_time_1 = '20分以内' #動作確認用
+  # $transit_time_2 = '10分以内' #動作確認用
+  # 「住みたいエリア」ボタン
+  @tokyo_btn = '//*[@id="ta13"]'
+  @kanagawa_btn = '//*[@id="ta14"]'
+  @saitama_btn = '//*[@id="ta11"]'
+  @chiba_btn = '//*[@id="ta12"]'
+  # 検索開始ボタン
+  @search_start_btn = '//*[@id="js-contents-timePanel"]/div[2]/div[7]/a'
+  # 「住みたいエリア」を東京都に絞って検索するメソッド
+  def self.search_destination_transit_time_tokyo
+    # option設定(スクレイピングブラウザの非表示)
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
+    # Seleniumの起動
+    driver = Selenium::WebDriver.for :chrome, options: options
+    # driverに待機時間を指示
+    wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+    # スクレイピングに関する以下の処理が成功できるまで例外処理でリトライを行う
+    begin
+      # 最初の遷移先の指定
+      driver.get "https://suumo.jp/jj/chintai/kensaku/FR301FB005/?ar=030&bs=040"
+      # 今回は目的地を２駅設定したいので最初に「駅を追加する」のボタン要素を取得してクリックする
+      driver.find_element(:xpath, @add_station_btn).click
+      # 1駅目のフォームの要素取得と入力
+      form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
+      # フォーム入力の値はアプリ上でユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_1.send_keys $destination_1
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_1.clear
+      form_1.send_keys $destination_1
+      # 1駅目の所要時間のセレクトタグの取得
+      time_1 = driver.find_element(:tag_name, 'select')
+      select_1 = Selenium::WebDriver::Support::Select.new(time_1)
+      # 所要時間の選択はアプリ上のユーザーの選択した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      select_1.select_by(:text, $transit_time_1)
+      # 2駅目のフォームの要素取得と入力
+      form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
+      # フォーム入力の値はユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_2.send_keys $destination_2
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_2.clear
+      form_2.send_keys $destination_2
+      # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
+      time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
+      select_2 = Selenium::WebDriver::Support::Select.new(time_2)
+      # controllerから値を引っ張るためグローバル変数を設定
+      select_2.select_by(:text, $transit_time_2)
+      # 「住みたいエリア」の東京の要素を取得してクリック
+      driver.find_element(:xpath, @tokyo_btn).click
+      # submitボタンの要素取得と実行(検索開始)
+      driver.find_element(:xpath, @search_start_btn).click
+      # 検索結果の表示(駅情報を頭2ページ分のみ取得する)
+      # 検索結果のページに該当物件の件数の要素(paginate_set-hit)もしくは該当物件が存在しない場合の要素(error_pop-txt)のいずれかにヒットする要素を取得する
+      element = driver.find_element(:xpath, '/html/body//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")or contains(@class, "errorbox")]')
+      wait.until {element.displayed?}
+      sleep(1)
+      # 要素を取得してelementに格納できたらケースごとに出力する
+      # 該当物件が存在する場合の処理(classの要素で判定)
+      if element.attribute('class') == 'paginate_set-hit'
+        # 検索結果の駅名を格納する空配列を作成。controller側で読み込めるようにグローバル変数化する
+        $candidate_station = []
+        # 2回分のページ遷移が真の間は処理が繰り返されるようにする
+        page = 0
+        while page < 2 do
+          # 表示されたページの物件情報の中から駅情報の要素を取得してinfomations_pageへ格納する
+          infomations_page = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
+          # 指定された要素が表示状態になるまで待機する
+          #wait.until {infomations_page.displayed?}
+          # 格納された駅情報を順に表示する
+          infomations_page.each do |info|
+            # ブラウザの駅名html要素は/と駅の間に表示されているのでindexとsliceメソッドを使って駅名のみを取り出す
+            a = info.text.index("/")
+            b = info.text.index("駅")
+            # 稀にバス便の情報が混じっていて"駅"表記がない場合はnilが返ってくるのでその情報はスキップする
+            next if b.nil?
+            # 最終的に取り出した駅名要素を$candidate_stationに格納していきcontrollerで読み込めるようにする
+            $candidate_station << info.text.slice(a+1..b-1)
+            # 動作確認用
+            # puts $candidate_station
+          end
+          # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
+          if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
+            driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').click
+          # 「次へ」ボタンの要素が存在しない場合はbreakしてループを抜ける
+          else
+            break
+          end
+          page += 1
+        end
+      # 該当物件が存在しない場合の処理(classの要素で判定)
+      elsif element.attribute('class') == 'error_pop-txt'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      elsif element.attribute('class') == 'errorbox'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      else
+        $candidate_station = "想定外のエラーが起きています！！"
+        # 動作確認用
+        # puts $candidate_station
+      end
+    rescue
+      # 例外処理、beginの処理が成功しなければリトライを行う
+      retry
+    end
+  end
+  # 「住みたいエリア」を神奈川県に絞って検索するメソッド
+  def self.search_destination_transit_time_kanagawa
+    # option設定(スクレイピングブラウザの非表示)
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
+    # Seleniumの起動
+    driver = Selenium::WebDriver.for :chrome, options: options
+    # driverに待機時間を指示
+    wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+    # スクレイピングに関する以下の処理が成功できるまで例外処理でリトライを行う
+    begin
+      # 最初の遷移先の指定
+      driver.get "https://suumo.jp/jj/chintai/kensaku/FR301FB005/?ar=030&bs=040"
+      # 今回は目的地を２駅設定したいので最初に「駅を追加する」のボタン要素を取得してクリックする
+      driver.find_element(:xpath, @add_station_btn).click
+      # 1駅目のフォームの要素取得と入力
+      form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
+      # フォーム入力の値はアプリ上でユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_1.send_keys $destination_1
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_1.clear
+      form_1.send_keys $destination_1
+      # 1駅目の所要時間のセレクトタグの取得
+      time_1 = driver.find_element(:tag_name, 'select')
+      select_1 = Selenium::WebDriver::Support::Select.new(time_1)
+      # 所要時間の選択はアプリ上のユーザーの選択した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      select_1.select_by(:text, $transit_time_1)
+      # 2駅目のフォームの要素取得と入力
+      form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
+      # フォーム入力の値はユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_2.send_keys $destination_2
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_2.clear
+      form_2.send_keys $destination_2
+      # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
+      time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
+      select_2 = Selenium::WebDriver::Support::Select.new(time_2)
+      # controllerから値を引っ張るためグローバル変数を設定
+      select_2.select_by(:text, $transit_time_2)
+      # 「住みたいエリア」の神奈川の要素を取得してクリック
+      driver.find_element(:xpath, @kanagawa_btn).click
+      # submitボタンの要素取得と実行(検索開始)
+      driver.find_element(:xpath, @search_start_btn).click
+      # 検索結果の表示(駅情報を頭2ページ分のみ取得する)
+      # 検索結果のページに該当物件の件数の要素(paginate_set-hit)もしくは該当物件が存在しない場合の要素(error_pop-txt)のいずれかにヒットする要素を取得する
+      element = driver.find_element(:xpath, '/html/body//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")or contains(@class, "errorbox")]')
+      wait.until {element.displayed?}
+      sleep(1)
+      # 要素を取得してelementに格納できたらケースごとに出力する
+      # 該当物件が存在する場合の処理(classの要素で判定)
+      if element.attribute('class') == 'paginate_set-hit'
+        # 検索結果の駅名を格納する空配列を作成。controller側で読み込めるようにグローバル変数化する
+        $candidate_station = []
+        # 2回分のページ遷移が真の間は処理が繰り返されるようにする
+        page = 0
+        while page < 2 do
+          # 表示されたページの物件情報の中から駅情報の要素を取得してinfomations_pageへ格納する
+          infomations_page = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
+          # 指定された要素が表示状態になるまで待機する
+          #wait.until {infomations_page.displayed?}
+          # 格納された駅情報を順に表示する
+          infomations_page.each do |info|
+            # ブラウザの駅名html要素は/と駅の間に表示されているのでindexとsliceメソッドを使って駅名のみを取り出す
+            a = info.text.index("/")
+            b = info.text.index("駅")
+            # 稀にバス便の情報が混じっていて"駅"表記がない場合はnilが返ってくるのでその情報はスキップする
+            next if b.nil?
+            # 最終的に取り出した駅名要素を$candidate_stationに格納していきcontrollerで読み込めるようにする
+            $candidate_station << info.text.slice(a+1..b-1)
+            # 動作確認用
+            # puts $candidate_station
+          end
+          # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
+          if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
+            driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').click
+          # 「次へ」ボタンの要素が存在しない場合はbreakしてループを抜ける
+          else
+            break
+          end
+          page += 1
+        end
+      # 該当物件が存在しない場合の処理(classの要素で判定)
+      elsif element.attribute('class') == 'error_pop-txt'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      elsif element.attribute('class') == 'errorbox'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      else
+        $candidate_station = "想定外のエラーが起きています！！"
+        # 動作確認用
+        # puts $candidate_station
+      end
+    rescue
+      # 例外処理、beginの処理が成功しなければリトライを行う
+      retry
+    end
+  end
+  # 「住みたいエリア」を埼玉県に絞って検索するメソッド
+  def self.search_destination_transit_time_saitama
+    # option設定(スクレイピングブラウザの非表示)
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
+    # Seleniumの起動
+    driver = Selenium::WebDriver.for :chrome, options: options
+    # driverに待機時間を指示
+    wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+    # スクレイピングに関する以下の処理が成功できるまで例外処理でリトライを行う
+    begin
+      # 最初の遷移先の指定
+      driver.get "https://suumo.jp/jj/chintai/kensaku/FR301FB005/?ar=030&bs=040"
+      # 今回は目的地を２駅設定したいので最初に「駅を追加する」のボタン要素を取得してクリックする
+      driver.find_element(:xpath, @add_station_btn).click
+      # 1駅目のフォームの要素取得と入力
+      form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
+      # フォーム入力の値はアプリ上でユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_1.send_keys $destination_1
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_1.clear
+      form_1.send_keys $destination_1
+      # 1駅目の所要時間のセレクトタグの取得
+      time_1 = driver.find_element(:tag_name, 'select')
+      select_1 = Selenium::WebDriver::Support::Select.new(time_1)
+      # 所要時間の選択はアプリ上のユーザーの選択した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      select_1.select_by(:text, $transit_time_1)
+      # 2駅目のフォームの要素取得と入力
+      form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
+      # フォーム入力の値はユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_2.send_keys $destination_2
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_2.clear
+      form_2.send_keys $destination_2
+      # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
+      time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
+      select_2 = Selenium::WebDriver::Support::Select.new(time_2)
+      # controllerから値を引っ張るためグローバル変数を設定
+      select_2.select_by(:text, $transit_time_2)
+      # 「住みたいエリア」の埼玉の要素を取得してクリック
+      driver.find_element(:xpath, @saitama_btn).click
+      # submitボタンの要素取得と実行(検索開始)
+      driver.find_element(:xpath, @search_start_btn).click
+      # 検索結果の表示(駅情報を頭2ページ分のみ取得する)
+      # 検索結果のページに該当物件の件数の要素(paginate_set-hit)もしくは該当物件が存在しない場合の要素(error_pop-txt)のいずれかにヒットする要素を取得する
+      element = driver.find_element(:xpath, '/html/body//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")or contains(@class, "errorbox")]')
+      wait.until {element.displayed?}
+      sleep(1)
+      # 要素を取得してelementに格納できたらケースごとに出力する
+      # 該当物件が存在する場合の処理(classの要素で判定)
+      if element.attribute('class') == 'paginate_set-hit'
+        # 検索結果の駅名を格納する空配列を作成。controller側で読み込めるようにグローバル変数化する
+        $candidate_station = []
+        # 2回分のページ遷移が真の間は処理が繰り返されるようにする
+        page = 0
+        while page < 2 do
+          # 表示されたページの物件情報の中から駅情報の要素を取得してinfomations_pageへ格納する
+          infomations_page = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
+          # 指定された要素が表示状態になるまで待機する
+          #wait.until {infomations_page.displayed?}
+          # 格納された駅情報を順に表示する
+          infomations_page.each do |info|
+            # ブラウザの駅名html要素は/と駅の間に表示されているのでindexとsliceメソッドを使って駅名のみを取り出す
+            a = info.text.index("/")
+            b = info.text.index("駅")
+            # 稀にバス便の情報が混じっていて"駅"表記がない場合はnilが返ってくるのでその情報はスキップする
+            next if b.nil?
+            # 最終的に取り出した駅名要素を$candidate_stationに格納していきcontrollerで読み込めるようにする
+            $candidate_station << info.text.slice(a+1..b-1)
+            # 動作確認用
+            # puts $candidate_station
+          end
+          # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
+          if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
+            driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').click
+          # 「次へ」ボタンの要素が存在しない場合はbreakしてループを抜ける
+          else
+            break
+          end
+          page += 1
+        end
+      # 該当物件が存在しない場合の処理(classの要素で判定)
+      elsif element.attribute('class') == 'error_pop-txt'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      elsif element.attribute('class') == 'errorbox'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      else
+        $candidate_station = "想定外のエラーが起きています！！"
+        # 動作確認用
+        # puts $candidate_station
+      end
+    rescue
+      # 例外処理、beginの処理が成功しなければリトライを行う
+      retry
+    end
+  end
+  # 「住みたいエリア」を千葉県に絞って検索するメソッド
+  def self.search_destination_transit_time_chiba
+    # option設定(スクレイピングブラウザの非表示)
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
+    # Seleniumの起動
+    driver = Selenium::WebDriver.for :chrome, options: options
+    # driverに待機時間を指示
+    wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+    # スクレイピングに関する以下の処理が成功できるまで例外処理でリトライを行う
+    begin
+      # 最初の遷移先の指定
+      driver.get "https://suumo.jp/jj/chintai/kensaku/FR301FB005/?ar=030&bs=040"
+      # 今回は目的地を２駅設定したいので最初に「駅を追加する」のボタン要素を取得してクリックする
+      driver.find_element(:xpath, @add_station_btn).click
+      # 1駅目のフォームの要素取得と入力
+      form_1 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_1"]')
+      # フォーム入力の値はアプリ上でユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_1.send_keys $destination_1
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_1.clear
+      form_1.send_keys $destination_1
+      # 1駅目の所要時間のセレクトタグの取得
+      time_1 = driver.find_element(:tag_name, 'select')
+      select_1 = Selenium::WebDriver::Support::Select.new(time_1)
+      # 所要時間の選択はアプリ上のユーザーの選択した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      select_1.select_by(:text, $transit_time_1)
+      # 2駅目のフォームの要素取得と入力
+      form_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-ekiText_2"]')
+      # フォーム入力の値はユーザーが入力した情報をcontrollerから値を引っ張るためグローバル変数を設定
+      form_2.send_keys $destination_2
+      # 入力エラーもしくはretry時の対策として一度クリアにして、あえて再度入力させる
+      form_2.clear
+      form_2.send_keys $destination_2
+      # 2駅目の所要時間のセレクトタグの取得(2回目は:xpathとしないと1回目と同じセレクトタグを取得してしまい上手く動作しない)
+      time_2 = driver.find_element(:xpath, '//*[@id="js-timePanel-display_2"]/div[1]/dl[2]/dd/select')
+      select_2 = Selenium::WebDriver::Support::Select.new(time_2)
+      # controllerから値を引っ張るためグローバル変数を設定
+      select_2.select_by(:text, $transit_time_2)
+      # 「住みたいエリア」の千葉の要素を取得してクリック
+      driver.find_element(:xpath, @chiba_btn).click
+      # submitボタンの要素取得と実行(検索開始)
+      driver.find_element(:xpath, @search_start_btn).click
+      # 検索結果の表示(駅情報を頭2ページ分のみ取得する)
+      # 検索結果のページに該当物件の件数の要素(paginate_set-hit)もしくは該当物件が存在しない場合の要素(error_pop-txt)のいずれかにヒットする要素を取得する
+      element = driver.find_element(:xpath, '/html/body//*[contains(@class, "paginate_set-hit")or contains(@class, "error_pop-txt")or contains(@class, "errorbox")]')
+      wait.until {element.displayed?}
+      sleep(1)
+      # 要素を取得してelementに格納できたらケースごとに出力する
+      # 該当物件が存在する場合の処理(classの要素で判定)
+      if element.attribute('class') == 'paginate_set-hit'
+        # 検索結果の駅名を格納する空配列を作成。controller側で読み込めるようにグローバル変数化する
+        $candidate_station = []
+        # 2回分のページ遷移が真の間は処理が繰り返されるようにする
+        page = 0
+        while page < 2 do
+          # 表示されたページの物件情報の中から駅情報の要素を取得してinfomations_pageへ格納する
+          infomations_page = driver.find_elements(:xpath, '/html/body/div[5]/div/div[2]/div/div[1]//*[contains(@class, "cassetteitem_detail-text")]')
+          # 指定された要素が表示状態になるまで待機する
+          #wait.until {infomations_page.displayed?}
+          # 格納された駅情報を順に表示する
+          infomations_page.each do |info|
+            # ブラウザの駅名html要素は/と駅の間に表示されているのでindexとsliceメソッドを使って駅名のみを取り出す
+            a = info.text.index("/")
+            b = info.text.index("駅")
+            # 稀にバス便の情報が混じっていて"駅"表記がない場合はnilが返ってくるのでその情報はスキップする
+            next if b.nil?
+            # 最終的に取り出した駅名要素を$candidate_stationに格納していきcontrollerで読み込めるようにする
+            $candidate_station << info.text.slice(a+1..b-1)
+            # 動作確認用
+            # puts $candidate_station
+          end
+          # 表示されたページに対して「次へ」ボタンの要素が1つ以上存在すれば、要素を取得してクリックする
+          if driver.find_elements(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').size > 0
+            driver.find_element(:xpath, '//*[@id="js-leftColumnForm"]/div[11]/div[2]//*[contains(text(), "次へ")]').click
+          # 「次へ」ボタンの要素が存在しない場合はbreakしてループを抜ける
+          else
+            break
+          end
+          page += 1
+        end
+      # 該当物件が存在しない場合の処理(classの要素で判定)
+      elsif element.attribute('class') == 'error_pop-txt'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      elsif element.attribute('class') == 'errorbox'
+        $candidate_station = element.text
+        # 動作確認用
+        # puts $candidate_station
+      else
+        $candidate_station = "想定外のエラーが起きています！！"
+        # 動作確認用
+        # puts $candidate_station
+      end
+    rescue
+      # 例外処理、beginの処理が成功しなければリトライを行う
+      retry
     end
   end
 end

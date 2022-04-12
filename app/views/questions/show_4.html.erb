@@ -1,0 +1,12 @@
+<h1>Q4</h1>
+<!--フォームに入力されたデータをDBへ保存しないので次の遷移ページにurlのパスを指定する-->
+<%= form_with url: show_5_questions_path do |form| %>
+  <!--questions_controllerで設定した@questions = Question.find(19)のcontentを表示する-->
+  <%= @question.content %><br>
+  <!--:prefecture_to_liveはformで渡すデータのnameを指定する。@answers_19にはAnswer.where(question_id: Q_19)が格納されている-->
+  <%= form.collection_select(:prefecture_to_live, @answers_19, :content, :content, {prompt: "住みたいエリアを選択してください"}, required: true) %><br>
+<br>
+  <%= form.submit 'NEXT', class: "btn btn-primary" %>
+<% end %>
+
+<%= link_to 'BACK', show_3_questions_path %>

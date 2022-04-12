@@ -1,0 +1,12 @@
+<h1>Q10</h1>
+<!--フォームに入力されたデータをDBへ保存しないので次の遷移ページにurlのパスを指定する-->
+<%= form_with url: show_11_questions_path do |form| %>
+  <!--questions_controllerで設定した@questions = Question.find(13)のcontentを表示する-->
+  <%= @question.content %><br>
+  <!--:tabelogはformで渡すデータのnameを指定する。@answers_13にはAnswer.where(question_id: Q_13)が格納されている-->
+  <%= form.collection_select(:tabelog, @answers_13, :content, :content, {prompt: "どちらか選択してください"}, required: true) %><br>
+<br>
+  <%= form.submit 'NEXT', class: "btn btn-primary" %>
+<% end %>
+
+<%= link_to 'BACK', show_9_questions_path %>
