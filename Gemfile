@@ -65,3 +65,7 @@ gem 'webdrivers'
 gem 'whenever', require: false
 
 gem 'pry-rails'
+
+# gem 'twitter'
+
+gem 'google_places'

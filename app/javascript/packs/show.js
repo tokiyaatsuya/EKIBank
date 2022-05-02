@@ -4,6 +4,6 @@ $(function(){
   $('form').submit(function(e) {
     $('#btn').val('処理中・・・'), setInterval(function() {
       $('#btn').val('リトライ')
-    }, 15000);
+    }, 20000);
   });
 });

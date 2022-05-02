@@ -28,10 +28,6 @@ Rails.application.routes.draw do
       post 'show_11', to: 'questions#show_11'
       get 'show_12'
       post 'show_12', to: 'questions#show_12'
-      get 'show_13'
-      post 'show_13', to: 'questions#show_13'
-      get 'show_14'
-      post 'show_14', to: 'questions#show_14'
       get 'answer/show'
       post 'answer/show', to: 'answers#show'
     end
