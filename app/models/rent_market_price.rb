@@ -2975,9 +2975,9 @@ class RentMarketPrice < ApplicationRecord
       # 上で取得した座標を代入して検索中の駅の半径200m以内の施設を検索する
       gyms = client.spots(@lat, @lng, :radius => 200, :language => 'ja', :name => 'フィットネスジム')
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でgymカラムに保存する
-      if gyms.present? == true
+      if gyms.present?
         record.gym = "有り"
-      elsif gyms.present? == false
+      elsif !gyms.present?
         record.gym = "無し"
       end
       record.save

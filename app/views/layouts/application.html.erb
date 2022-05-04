@@ -17,7 +17,7 @@
           <br>
           <strong><%= link_to current_user.username, pages_show_path %></strong>
           <%= link_to 'プロフィール変更', edit_user_registration_path %>
-          <%= link_to 'ログアウト', destroy_user_session_path, method: :delete %>
+          <%= link_to 'ログアウト', destroy_user_session_path %>
         <% else %>
           <br>
           <br>
