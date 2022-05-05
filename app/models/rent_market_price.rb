@@ -3,6 +3,7 @@ class RentMarketPrice < ApplicationRecord
   enum floor_plan: { "ワンルーム": 0, "1K/1DK": 1, "1LDK/2K/2DK": 2, "2LDK/3K/3DK": 3, "3LDK/4K~": 4 }
   require 'selenium-webdriver'
   require 'webdrivers'
+  # require 'twitter'
   attr_reader :destination_1, :destination_2, :transit_time_1, :transit_time_2
 
   # 変数の定義
@@ -2890,6 +2891,96 @@ class RentMarketPrice < ApplicationRecord
     rescue
       # 例外処理、beginの処理が成功しなければリトライを行う
       retry
+    end
+  end
+
+
+
+  # Twitter API(精度が低いので今回は採用しません)
+  # def self.twitter
+  #   client = Twitter::REST::Client.new do |config|
+  #     config.consumer_key        = ENV["API_KEY"]
+  #     config.consumer_secret     = ENV["API_KEY_SECRET"]
+  #     config.access_token        = ENV["ACCESS_TOKEN"]
+  #     config.access_token_secret = ENV["ACCESS_TOKEN_SECRET"]
+  #   end
+  #   client.search("目黒駅 静か", result_type: "recent").take(10).collect do |tweet|
+  #     puts tweet.text
+  #   end
+  # end
+  # Places APIの動作時に必要な駅のgeocode(座標)を取得してdbへ保存する(スクレイピングの動作が安定しないのと、Places APIで座標が必須ではなかったので今回は採用しません)
+  # def self.get_geocoding
+  #   # option設定(スクレイピングブラウザの非表示)
+  #   options = Selenium::WebDriver::Chrome::Options.new
+  #   options.add_argument('--headless')
+  #   # Seleniumの起動
+  #   driver = Selenium::WebDriver.for :chrome, options: options
+  #   # driverに待機時間を指示
+  #   wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+  #   # RentMarketPriceテーブルの全レコードを取得する
+  #   records = RentMarketPrice.all
+  #   # 1つのレコードごとにループ処理を行って、その中でスクレイピング時に駅名の使用と、取得した座標の値の座標カラムへの追加をレコードごとに行なっていく
+  #   records.each do |record|
+  #     # 最初の遷移先の指定
+  #     driver.get "https://www.geocoding.jp/api/"
+  #     # formの要素を取得
+  #     form = driver.find_element(:xpath, '//*[@id="searchbox"]')
+  #     # formにループで回しているレコードの駅名を取得して入力する
+  #     form.send_keys record.station_name+"駅"
+  #     # 前の駅名情報が残ってしまっていると嫌なので、あえて一度クリアして再度駅名を入力する
+  #     form.clear
+  #     form.send_keys record.station_name+"駅"
+  #     # 検索開始ボタンの要素取得とボタンのクリック
+  #     driver.find_element(:xpath, '/html/body/div/center/div[3]/form/div[2]/input[1]').click
+  #     sleep(1)
+  #     # 検索結果が表示されたページで座標の要素を取得する(数値だけ取り出せなかったのでこの後に削ぎ落とす)
+  #     elements = driver.find_elements(:id, 'folder1')
+  #     elements.each do |element|
+  #       # latitude(緯度) タグの中身を必要な数値だけ取り出す
+  #       latitude_head = element.text.index("<lat>")
+  #       latitude_end = element.text.index("</lat>")
+  #       # 削ぎ落とした緯度の数値だけをループで回しているレコードの緯度カラムへ格納する
+  #       record.geocode_latitude = element.text.slice(latitude_head+5..latitude_end-1)
+  #       # puts latitude # 動作確認用
+  #       # longitude(経度) タグの中身を必要な数値だけ取り出す
+  #       longitude_head = element.text.index("<lng>")
+  #       longitude_end = element.text.index("</lng>")
+  #       # 削ぎ落とした緯度の数値だけをループで回しているレコードの経度カラムへ格納する
+  #       record.geocode_longitude = element.text.slice(longitude_head+5..longitude_end-1)
+  #       # puts longitude # 動作確認用
+  #       record.save
+  #     end
+  #     # サイト運営者より検索は10秒に1件くらいにしてほしいと但し書きあり
+  #     sleep(10)
+  #   end
+  # end
+
+  # Google Places API
+  # gym
+  def self.google_places_gym
+    # APIを扱うクラスのインスタンスを用意する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    # RentMarketPriceテーブルの全レコードを取得する
+    records = RentMarketPrice.all
+    # レコードごとにループを回す
+    records.each do |record|
+      # 最初にレコードから駅名を取り出し、その駅の情報を検索して座標(緯度・経度)を取得する
+      geocodes = client.spots_by_query("#{record.station_name}駅", :language => 'ja') # 式展開はダブルクォーテーション
+      geocodes.each do |geocode|
+        # 緯度の取得
+        @lat = geocode.lat
+        # 経度の取得
+        @lng = geocode.lng
+      end
+      # 上で取得した座標を代入して検索中の駅の半径200m以内の施設を検索する
+      gyms = client.spots(@lat, @lng, :radius => 200, :language => 'ja', :name => 'フィットネスジム')
+      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でgymカラムに保存する
+      if gyms.present?
+        record.gym = "有り"
+      elsif !gyms.present?
+        record.gym = "無し"
+      end
+      record.save
     end
   end
 end
