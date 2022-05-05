@@ -2983,4 +2983,32 @@ class RentMarketPrice < ApplicationRecord
       record.save
     end
   end
+  # starbucks_coffee
+  def self.google_places_starbucks_coffee
+    # APIを扱うクラスのインスタンスを用意する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    # RentMarketPriceテーブルの全レコードを取得する
+    # records = RentMarketPrice.where(id: 1899..)
+    records = RentMarketPrice.all
+    # レコードごとにループを回す
+    records.each do |record|
+      # 最初にレコードから駅名を取り出し、その駅の情報を検索して座標(緯度・経度)を取得する
+      geocodes = client.spots_by_query("#{record.station_name}駅", :language => 'ja') # 式展開はダブルクォーテーション
+      geocodes.each do |geocode|
+        # 緯度の取得
+        @lat = geocode.lat
+        # 経度の取得
+        @lng = geocode.lng
+      end
+      # 上で取得した座標を代入して検索中の駅の半径200m以内の施設を検索する
+      starbucks_coffees = client.spots(@lat, @lng, :radius => 200, :language => 'ja', :name => 'スターバックスコーヒー')
+      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でstarbucks_coffeeカラムに保存する
+      if starbucks_coffees.present?
+        record.starbucks_coffee = "有り"
+      elsif !starbucks_coffees.present?
+        record.starbucks_coffee = "無し"
+      end
+      record.save
+    end
+  end
 end
