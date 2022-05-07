@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 2022_05_05_144543) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "floor_plan"
+    t.float "geocode_latitude", limit: 53
+    t.float "geocode_longitude", limit: 53
     t.string "gym"
     t.string "starbucks_coffee"
   end

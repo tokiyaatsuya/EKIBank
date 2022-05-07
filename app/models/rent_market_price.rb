@@ -2259,8 +2259,10 @@ class RentMarketPrice < ApplicationRecord
       driver.get @prefecture
       # 沿線一覧から該当する沿線の要素を取得してクリック
       driver.find_element(:xpath, @rail_line_name).click
+      sleep(2)
       # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りはワンルーム)
       infomations = driver.find_elements(:xpath, @station_name_and_market_price)
+      sleep(2)
       # 空の変数rent_market_price = ''をif文の外側に定義し、ifとelseの分岐の際にインスタンスがリセットされないようにする。故に駅名と金額が同じレコードに保存されるようにする
       rent_market_price = ''
       # infomationsをループで回すと駅名→価格→駅名→価格・・・と言う順序でデータが取得できる
@@ -2299,12 +2301,14 @@ class RentMarketPrice < ApplicationRecord
       driver.get @prefecture
       # 沿線一覧から該当する沿線の要素を取得してクリック
       driver.find_element(:xpath, @rail_line_name).click
+      sleep(2)
       # 1K/1DKの間取りのボタンの要素を取得してクリック
       driver.find_element(:xpath, @floorplan_1k_1dk_btn).click
       # 間取りを選択しクリックしたら情報反映のために更新ボタンの要素を取得してクリック
       driver.find_element(:xpath, @submit_btn).click
       # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りはワンルーム)
       infomations = driver.find_elements(:xpath, @station_name_and_market_price)
+      sleep(2)
       # 空の変数rent_market_price = ''をif文の外側に定義し、ifとelseの分岐の際にインスタンスがリセットされないようにする。故に駅名と金額が同じレコードに保存されるようにする
       rent_market_price = ''
       # infomationsをループで回すと駅名→価格→駅名→価格・・・と言う順序でデータが取得できる
@@ -2343,12 +2347,14 @@ class RentMarketPrice < ApplicationRecord
       driver.get @prefecture
       # 沿線一覧から該当する沿線の要素を取得してクリック
       driver.find_element(:xpath, @rail_line_name).click
+      sleep(2)
       # 1LDK/2K/2DKの間取りのボタンの要素を取得してクリック
       driver.find_element(:xpath, @floorplan_1ldk_2k_2dk_btn).click
       # 間取りを選択しクリックしたら情報反映のために更新ボタンの要素を取得してクリック
       driver.find_element(:xpath, @submit_btn).click
       # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りはワンルーム)
       infomations = driver.find_elements(:xpath, @station_name_and_market_price)
+      sleep(2)
       # 空の変数rent_market_price = ''をif文の外側に定義し、ifとelseの分岐の際にインスタンスがリセットされないようにする。故に駅名と金額が同じレコードに保存されるようにする
       rent_market_price = ''
       # infomationsをループで回すと駅名→価格→駅名→価格・・・と言う順序でデータが取得できる
@@ -2387,12 +2393,14 @@ class RentMarketPrice < ApplicationRecord
       driver.get @prefecture
       # 沿線一覧から該当する沿線の要素を取得してクリック
       driver.find_element(:xpath, @rail_line_name).click
+      sleep(2)
       # 2LDK/3K/3DKの間取りのボタンの要素を取得してクリック
       driver.find_element(:xpath, @floorplan_2ldk_3k_3dk_btn).click
       # 間取りを選択しクリックしたら情報反映のために更新ボタンの要素を取得してクリック
       driver.find_element(:xpath, @submit_btn).click
       # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りはワンルーム)
       infomations = driver.find_elements(:xpath, @station_name_and_market_price)
+      sleep(2)
       # 空の変数rent_market_price = ''をif文の外側に定義し、ifとelseの分岐の際にインスタンスがリセットされないようにする。故に駅名と金額が同じレコードに保存されるようにする
       rent_market_price = ''
       # infomationsをループで回すと駅名→価格→駅名→価格・・・と言う順序でデータが取得できる
@@ -2431,12 +2439,14 @@ class RentMarketPrice < ApplicationRecord
       driver.get @prefecture
       # 沿線一覧から該当する沿線の要素を取得してクリック
       driver.find_element(:xpath, @rail_line_name).click
+      sleep(2)
       # 3LDK/4K~の間取りのボタンの要素を取得してクリック
       driver.find_element(:xpath, @floorplan_3ldk_4k_btn).click
       # 間取りを選択しクリックしたら情報反映のために更新ボタンの要素を取得してクリック
       driver.find_element(:xpath, @submit_btn).click
       # 表示された各沿線の「駅名」と「家賃相場金額」の値を取得して表示する(1回目の表示の間取りはワンルーム)
       infomations = driver.find_elements(:xpath, @station_name_and_market_price)
+      sleep(2)
       # 空の変数rent_market_price = ''をif文の外側に定義し、ifとelseの分岐の際にインスタンスがリセットされないようにする。故に駅名と金額が同じレコードに保存されるようにする
       rent_market_price = ''
       # infomationsをループで回すと駅名→価格→駅名→価格・・・と言う順序でデータが取得できる
@@ -2956,24 +2966,37 @@ class RentMarketPrice < ApplicationRecord
   # end
 
   # Google Places API
-  # gym
-  def self.google_places_gym
+  # geocode
+  def self.get_geocode
     # APIを扱うクラスのインスタンスを用意する
     client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
     # RentMarketPriceテーブルの全レコードを取得する
     records = RentMarketPrice.all
     # レコードごとにループを回す
     records.each do |record|
-      # 最初にレコードから駅名を取り出し、その駅の情報を検索して座標(緯度・経度)を取得する
-      geocodes = client.spots_by_query("#{record.station_name}駅", :language => 'ja') # 式展開はダブルクォーテーション
-      geocodes.each do |geocode|
+      # レコードから駅名を取り出し、その駅のリクエストを送り情報を検索して座標(緯度・経度)を取得する
+      infomations = client.spots_by_query("#{record.station_name}駅", :language => 'ja') # 式展開はダブルクォーテーション
+      # 取得した情報の中から緯度と経度の情報を取得してレコードに保存する
+      infomations.select do |geocode|
         # 緯度の取得
-        @lat = geocode.lat
+        record.geocode_latitude = geocode.lat
         # 経度の取得
-        @lng = geocode.lng
+        record.geocode_longitude = geocode.lng
       end
-      # 上で取得した座標を代入して検索中の駅の半径200m以内の施設を検索する
-      gyms = client.spots(@lat, @lng, :radius => 200, :language => 'ja', :name => 'フィットネスジム')
+      record.save
+    end
+  end
+  # gym
+  def self.google_places_gym
+    # APIを扱うクラスのインスタンスを用意する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    # RentMarketPriceテーブルの全レコードを取得する
+    records = RentMarketPrice.all
+    # records = RentMarketPrice.where(id: 1899..)
+    # レコードごとにループを回す
+    records.each do |record|
+      # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
+      gyms = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'フィットネスジム')
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でgymカラムに保存する
       if gyms.present?
         record.gym = "有り"
@@ -2988,20 +3011,12 @@ class RentMarketPrice < ApplicationRecord
     # APIを扱うクラスのインスタンスを用意する
     client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
     # RentMarketPriceテーブルの全レコードを取得する
-    # records = RentMarketPrice.where(id: 1899..)
     records = RentMarketPrice.all
+    # records = RentMarketPrice.where(id: 1899..)
     # レコードごとにループを回す
     records.each do |record|
-      # 最初にレコードから駅名を取り出し、その駅の情報を検索して座標(緯度・経度)を取得する
-      geocodes = client.spots_by_query("#{record.station_name}駅", :language => 'ja') # 式展開はダブルクォーテーション
-      geocodes.each do |geocode|
-        # 緯度の取得
-        @lat = geocode.lat
-        # 経度の取得
-        @lng = geocode.lng
-      end
-      # 上で取得した座標を代入して検索中の駅の半径200m以内の施設を検索する
-      starbucks_coffees = client.spots(@lat, @lng, :radius => 200, :language => 'ja', :name => 'スターバックスコーヒー')
+      # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
+      starbucks_coffees = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'スターバックスコーヒー')
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でstarbucks_coffeeカラムに保存する
       if starbucks_coffees.present?
         record.starbucks_coffee = "有り"
