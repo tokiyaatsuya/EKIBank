@@ -2589,6 +2589,7 @@ class RentMarketPrice < ApplicationRecord
         $candidate_station = element.text
         # 動作確認用
         # puts $candidate_station
+      # 目的地として入力された駅名が正しくない場合の処理(classの要素で判定)
       elsif element.attribute('class') == 'errorbox'
         $candidate_station = element.text
         # 動作確認用
@@ -2689,6 +2690,7 @@ class RentMarketPrice < ApplicationRecord
         $candidate_station = element.text
         # 動作確認用
         # puts $candidate_station
+      # 目的地として入力された駅名が正しくない場合の処理(classの要素で判定)
       elsif element.attribute('class') == 'errorbox'
         $candidate_station = element.text
         # 動作確認用
@@ -2789,6 +2791,7 @@ class RentMarketPrice < ApplicationRecord
         $candidate_station = element.text
         # 動作確認用
         # puts $candidate_station
+      # 目的地として入力された駅名が正しくない場合の処理(classの要素で判定)
       elsif element.attribute('class') == 'errorbox'
         $candidate_station = element.text
         # 動作確認用
@@ -2889,6 +2892,7 @@ class RentMarketPrice < ApplicationRecord
         $candidate_station = element.text
         # 動作確認用
         # puts $candidate_station
+      # 目的地として入力された駅名が正しくない場合の処理(classの要素で判定)
       elsif element.attribute('class') == 'errorbox'
         $candidate_station = element.text
         # 動作確認用

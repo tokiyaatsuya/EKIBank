@@ -1,11 +1,13 @@
 class AnswersController < ApplicationController
   def show
     # answersのviewへ渡すようにquestions_controllerで作成したセッションパラメーターをインスタンス変数に格納する
-    @rent_budget = session[:rent_budget]
+    @rent_budget = session[:rent_budget].delete("^0-9").to_i # 〇〇万円以下の数値だけを格納する
     @floor_plan = session[:floor_plan]
     @prefecture_to_live = session[:prefecture_to_live]
-    @gym = session[:gym]
-    @starbucks_coffee = session[:starbucks_coffee]
+    # 以下、値を"必須" = "有り"、"必須ではない" = "無し"に変換する
+    # 三項演算子を使ってみる'条件 ? 式1 : 式2' true => 式1、false => 式2を実行
+    session[:gym] == "必須" ? @gym = "有り" : @gym = ["有り", "無し"]
+    session[:starbucks_coffee] == "必須" ? @starbucks_coffee = "有り" : @starbucks_coffee = ["有り", "無し"]
     @mcdonalds = session[:mcdonalds]
     @ohsho = session[:ohsho]
     @supermarket = session[:supermarket]
@@ -28,6 +30,21 @@ class AnswersController < ApplicationController
       RentMarketPrice.search_destination_transit_time_saitama
     elsif session[:prefecture_to_live] == '千葉県' #千葉県のバリュー
       RentMarketPrice.search_destination_transit_time_chiba
+    end
+    # スクレイピング終わりの$candidate_stationへ格納された内容をif文で条件分岐させる
+    if $candidate_station == "条件にあう物件がありません。条件を変更して再度検索してください。"
+      @not_candidate_station = $candidate_station
+    elsif $candidate_station == "入力された駅名は存在しませんでした。駅名を変更いただき、再度検索してください。"
+      @not_correct_station_name = $candidate_station
+    else
+      # 候補として取得した駅名$candidate_stationと希望する各条件を併せてwhereメソッドを使ってdbへデータの参照を行う
+      # uniq!メソッドで配列内の重複要素を除去し直す
+      infomations = RentMarketPrice.where(station_name: $candidate_station.uniq!).and(RentMarketPrice.where("(market_price <= ?) AND (floor_plan = ?)", @rent_budget, @floor_plan)).and(RentMarketPrice.where(gym: @gym)).and(RentMarketPrice.where(starbucks_coffee: @starbucks_coffee))
+      @exactly_station = []
+      # db参照の結果を出力する
+      infomations.each do |info|
+        @exactly_station << info.station_name + "駅"
+      end
     end
   end
 end

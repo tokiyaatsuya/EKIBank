@@ -69,3 +69,5 @@ gem 'pry-rails'
 # gem 'twitter'
 
 gem 'google_places'
+
+gem 'byebug'
