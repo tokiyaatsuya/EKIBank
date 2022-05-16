@@ -6,8 +6,8 @@ class AnswersController < ApplicationController
     @prefecture_to_live = session[:prefecture_to_live]
     # 以下、値を"必須" = "有り"、"必須ではない" = "無し"に変換する
     # 三項演算子を使ってみる'条件 ? 式1 : 式2' true => 式1、false => 式2を実行
-    session[:gym] == "必須" ? @gym = "有り" : @gym = ["有り", "無し"]
-    session[:starbucks_coffee] == "必須" ? @starbucks_coffee = "有り" : @starbucks_coffee = ["有り", "無し"]
+    @gym = session[:gym] == "必須" ? "有り" : ["有り", "無し"]
+    @starbucks_coffee = session[:starbucks_coffee] == "必須" ? "有り" : ["有り", "無し"]
     @mcdonalds = session[:mcdonalds]
     @ohsho = session[:ohsho]
     @supermarket = session[:supermarket]
