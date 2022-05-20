@@ -9,4 +9,7 @@
   <%= form.submit 'NEXT', class: "btn btn-primary" %>
 <% end %>
 
-<%= link_to 'BACK', show_7_questions_path %>
+<%= link_to 'BACK', show_7_questions_path %><br>
+<br>
+<!--質問回答数をプログレスバーを部分テンプレート化して表示する-->
+<%= render partial: 'layouts/progress_bar', locals: { style: "width: 58.1%", text: "質問回答数 7/12 問" } %>
