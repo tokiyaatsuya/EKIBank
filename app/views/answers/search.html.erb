@@ -1,0 +1,26 @@
+<h1>駅情報一覧</h1>
+<table>
+  <thead>
+    <tr>
+      <th>駅名</th>
+      <th>間取り：家賃相場</th>
+      <th>スポーツジム</th>
+      <th>スターバックスコーヒー</th>
+      <th colspan="10"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @results.each do |result| %>
+      <tr>
+        <td><%= result.station_name %></td>
+        <td><%= result.floor_plan %> : <%= result.market_price %>万円</td>
+        <td><%= result.gym %></td>
+        <td><%= result.starbucks_coffee %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<!--'BACK'の実装を:backとするとスクレイピングが始まってしまうので、検索フォームだけのページを作成して呼び出す-->
+<%= link_to 'BACK',  answers_back_search_path %>
+<%= link_to 'EXIT', pages_show_path %>

@@ -1,4 +1,7 @@
 class AnswersController < ApplicationController
+  # before_actionでshowアクションの先にset_searchメソッドを呼び出さないとエラーになる
+  before_action :set_search
+
   def show
     # answersのviewへ渡すようにquestions_controllerで作成したセッションパラメーターをインスタンス変数に格納する
     @rent_budget = session[:rent_budget].delete("^0-9").to_i # 〇〇万円以下の数値だけを格納する
@@ -46,5 +49,11 @@ class AnswersController < ApplicationController
         @exactly_station << info.station_name + "駅"
       end
     end
+  end
+  # 質問項目に一通り回答した後に気になる駅情報を検索出来る様にするメソッド
+  def set_search
+    # gem ransackを導入してransackメソッドとresultメソッドを使えるようにする
+    @q = RentMarketPrice.ransack(params[:q])
+    @results = @q.result
   end
 end
