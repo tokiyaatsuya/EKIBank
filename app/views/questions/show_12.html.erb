@@ -1,6 +1,6 @@
 <h1>Q12</h1>
 <!--フォームに入力されたデータをDBへ保存しないので次の遷移ページにurlのパスを指定する-->
-<%= form_with url: answer_show_questions_path do |form| %>
+<%= form_with url: create_answer_questions_path do |form| %>
   <!--questions_controllerで設定した@questions = Question.find(17)のcontentを表示する-->
   <%= @question.content %><br>
   <!--:spaはformで渡すデータのnameを指定する。@answers_17にはAnswer.where(question_id: Q_17)が格納されている-->

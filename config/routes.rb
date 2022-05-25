@@ -28,8 +28,12 @@ Rails.application.routes.draw do
       post 'show_11', to: 'questions#show_11'
       get 'show_12'
       post 'show_12', to: 'questions#show_12'
-      get 'answer/show'
-      post 'answer/show', to: 'answers#show'
+      get 'create_answer'
+      post 'create_answer', to: 'questions#create_answer'
     end
   end
+  get 'answers/show'
+  post 'answers/show', to: 'answers#show'
+  get 'answers/search'
+  get 'answers/back_search'
 end

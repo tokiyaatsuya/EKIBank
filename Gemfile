@@ -71,3 +71,5 @@ gem 'pry-rails'
 gem 'google_places'
 
 gem 'byebug'
+
+gem 'ransack'

@@ -33,4 +33,8 @@
 <!--確認用(ユーザーが入力したdestination、transit_timeの内容からスクレイピングを行った結果の駅名の表示)-->
 <%= "候補駅：#{$candidate_station}" %><br>
 <br>
+
+<!--駅名からの情報検索フォームを部分テンプレートで用意-->
+<%= render 'layouts/search' %>
+<br>
 <%= link_to 'EXIT', pages_show_path %>

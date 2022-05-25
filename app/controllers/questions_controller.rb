@@ -161,8 +161,15 @@ class QuestionsController < ApplicationController
       redirect_to action: :show_11
     end
   end
-
-  def create
+  # 各質問事項の回答をsessionで保持した状態であればanswersコントローラーのshowアクションを呼び出す
+  def create_answer
+    session[:spa] = answer_params[:spa]
+    # URL直打ち防止と質問画面を順番に遷移させるためにsessionの空判定とリダイレクト先を指定
+    if session[:spa].blank?
+      redirect_to action: :show_12
+    else
+      redirect_to controller: :answers, action: :show
+    end
   end
 
   private
