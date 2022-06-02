@@ -1,0 +1,1 @@
+import '../stylesheets/back_search.scss';

@@ -1,0 +1,1 @@
+import '../stylesheets/questions_show_10.scss';

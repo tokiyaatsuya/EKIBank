@@ -11,24 +11,43 @@
 
   <body>
     <header>
-      <nav>
-        <% if user_signed_in? %>
-          <br>
-          <br>
-          <strong><%= link_to current_user.username, pages_show_path %></strong>
-          <%= link_to 'プロフィール変更', edit_user_registration_path %>
-          <%= link_to 'ログアウト', destroy_user_session_path %>
-        <% else %>
-          <br>
-          <br>
-          <%= link_to 'サインアップ', new_user_registration_path %>
-          <%= link_to 'ログイン', new_user_session_path %>
-        <% end %>
+      <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container px-4 px-lg-5">
+          <a class="navbar-brand" href="/pages/show">Ekibank</a>
+          <% if user_signed_in? %>
+            <div class="collapse navbar-collapse">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="/users/edit"><%= current_user.username %></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/answers/back_search">駅名検索</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/users/sign_out">ログアウト</a>
+                </li>
+              </ul>
+            </div>
+          <% else %>
+            <div class="collapse navbar-collapse">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="/users/sign_up">サインアップ</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/users/sign_in">ログイン</a>
+                </li>
+              </ul>
+            </div>
+          <% end %>
+        </div>
       </nav>
+      <i class="notice"><%= notice %></i>
+      <i class="alert"><%= alert %></i>
     </header>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
     <!--各アクションに対応したviewファイルの差し込み-->
     <%= yield %>
+    <footer>
+    </footer>
   </body>
 </html>

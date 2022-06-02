@@ -1,40 +1,50 @@
-<h1>結果発表</h1>
-<!--ドンピシャの駅が存在すればその駅を表示する-->
-<% if @exactly_station.present? %>
-  <h2><%= "あなたの希望が全て当てはまる駅は#{@exactly_station}です！" %></h2>
-<!--ドンピシャの駅が存在しなければ目的地検索から抽出された候補駅とその駅の持つ店情報を表示する-->
-<% elsif !@exactly_station.present? && !@not_candidate_station.present? && !@not_correct_station_name.present? %>
-  <h2><%= "あなたの希望を全て叶えることは出来ませんが、オススメの駅は#{$candidate_station}駅です！" %></h2>
-<!--候補となる駅が存在しない場合のメッセージの表示-->
-<% elsif !@exactly_station.present? && @not_candidate_station.present? %>
-  <h2><%= @not_candidate_station %></h2>
-<!--そもそもの目的地として入力された駅名が正しく無い場合のメッセージの表示-->
-<% elsif !@exactly_station.present? && @not_correct_station_name.present? %>
-  <h2><%= @not_correct_station_name %></h2>
-<% end %>
-<br>
-<!--確認用(ユーザーが入力したパラメーターの内容を表示)-->
-<%= "希望予算：#{@rent_budget}万円以下" %><br>
-<%= "希望間取り：#{@floor_plan}" %><br>
-<%= "目的地１：#{$destination_1} 駅" %><br>
-<%= "所要時間１：#{$transit_time_1}" %><br>
-<%= "目的地２：#{$destination_2} 駅" %><br>
-<%= "所要時間２：#{$transit_time_2}" %><br>
-<%= "希望エリア：#{@prefecture_to_live}" %><br>
-<!--三項演算子を使ってみる'条件 ? 式1 : 式2' true => 式1、false => 式2を実行-->
-<%= @gym == "有り" ? "スポーツジム：必須" : "スポーツジム：必須ではない" %><br>
-<%= @starbucks_coffee == "有り" ? "スターバックスコーヒー：必須" : "スターバックスコーヒー：必須ではない" %><br>
-<%= "マクドナルド：#{@mcdonalds}" %><br>
-<%= "餃子の王将：#{@ohsho}" %><br>
-<%= "スーパー：#{@supermarket}" %><br>
-<%= "公園：#{@large_park}" %><br>
-<%= "図書館：#{@library}" %><br>
-<%= "銭湯：#{@spa}" %><br>
-<!--確認用(ユーザーが入力したdestination、transit_timeの内容からスクレイピングを行った結果の駅名の表示)-->
-<%= "候補駅：#{$candidate_station}" %><br>
-<br>
-
-<!--駅名からの情報検索フォームを部分テンプレートで用意-->
-<%= render 'layouts/search' %>
-<br>
-<%= link_to 'EXIT', pages_show_path %>
+<body class="answer-page">
+  <%= stylesheet_pack_tag 'answers_show', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <div class="container">
+    <div class="text-center">
+      <div class="style-adjust-answer">
+        <h1>結果発表</h1>
+        <!--ドンピシャの駅が存在すればその駅を表示する-->
+        <% if @exactly_station.present? %>
+          <h2><%= "あなたの希望が全て当てはまる駅は#{@exactly_station}です！" %></h2>
+        <!--ドンピシャの駅が存在しなければ目的地検索から抽出された候補駅とその駅の持つ店情報を表示する-->
+        <% elsif !@exactly_station.present? && !@not_candidate_station.present? && !@not_correct_station_name.present? %>
+          <h2><%= "あなたの希望を全て叶えることは出来ませんが、オススメの駅は#{$candidate_station}駅です！" %></h2>
+        <!--候補となる駅が存在しない場合のメッセージの表示-->
+        <% elsif !@exactly_station.present? && @not_candidate_station.present? %>
+          <h2><%= @not_candidate_station %></h2>
+        <!--そもそもの目的地として入力された駅名が正しく無い場合のメッセージの表示-->
+        <% elsif !@exactly_station.present? && @not_correct_station_name.present? %>
+          <h2><%= @not_correct_station_name %></h2>
+        <% end %>
+        <br>
+        <!--確認用(ユーザーが入力したパラメーターの内容を表示)-->
+        <table border="5" rules="all">
+          <tr><th>希望予算</th><td><%= @rent_budget %>万円以下</td></tr>
+          <tr><th>希望間取り</th><td><%= @floor_plan %></td></tr>
+          <tr><th>目的地１</th><td><%= $destination_1 %>駅</td></tr>
+          <tr><th>所要時間１</th><td><%= $transit_time_1 %></td></tr>
+          <tr><th>目的地２</th><td><%= $destination_2 %>駅</td></tr>
+          <tr><th>所要時間２</th><td><%= $transit_time_2 %></td></tr>
+          <tr><th>希望エリア</th><td><%= @prefecture_to_live %></td></tr>
+          <tr><!--三項演算子を使ってみる'条件 ? 式1 : 式2' true => 式1、false => 式2を実行-->
+          <tr><th>スポーツジム</th><td><%= @gym == "有り" ? "必須" : "必須ではない" %></td></tr>
+          <tr><th>スターバックスコーヒー</th><td><%= @starbucks_coffee == "有り" ? "必須" : "必須ではない" %></td></tr>
+          <tr><th>マクドナルド</th><td><%= @mcdonalds %></td></tr>
+          <tr><th>餃子の王将</th><td><%= @ohsho %></td></tr>
+          <tr><th>スーパー</th><td><%= @supermarket %></td></tr>
+          <tr><th>公園</th><td><%= @large_park %></td></tr>
+          <tr><th>図書館</th><td><%= @library %></td></tr>
+          <tr><th>銭湯・サウナ</th><td><%= @spa %></td></tr>
+          <!--確認用(ユーザーが入力したdestination、transit_timeの内容からスクレイピングを行った結果の駅名の表示)-->
+          <tr><th>候補駅</th><td><%= $candidate_station %></td></tr>
+        </table>
+        <br>
+        <!--駅名からの情報検索フォームを部分テンプレートで用意-->
+        <%= render 'layouts/search' %>
+        <br>
+        <%= link_to 'EXIT', pages_show_path, class: "btn btn-secondary btn-lg" %>
+      </div>
+    </div>
+  </div>
+</body>

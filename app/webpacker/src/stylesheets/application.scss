@@ -1,0 +1,60 @@
+// bootstrap
+@import '~bootstrap/scss/bootstrap';
+// ナビゲーションバー(ロゴ)
+a.navbar-brand {
+  font-style: normal;
+  font-size: xx-large;
+  color: white;
+  text-shadow:1px 1px 0 black, -1px -1px 0 black,
+              -1px 1px 0 black, 1px -1px 0 black,
+              0px 1px 0 black,  0-1px 0 black,
+              -1px 0 0 black, 1px 0 0 black;
+}
+// ナビゲーションバー(リンク)
+a.nav-link {
+  font-style: normal;
+  font-size: medium;
+  color: white;
+  text-shadow:1px 1px 0 black, -1px -1px 0 black,
+              -1px 1px 0 black, 1px -1px 0 black,
+              0px 1px 0 black,  0-1px 0 black,
+              -1px 0 0 black, 1px 0 0 black;
+}
+// textをど真ん中へ配置する
+.text-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform : translate(-50%,-50%);
+  transform : translate(-50%,-50%);
+  
+}
+// textの縁取り加工
+h1 {
+  text-align: left;
+  color: white;
+  text-shadow:1px 1px 0 black, -1px -1px 0 black,
+              -1px 1px 0 black, 1px -1px 0 black,
+              0px 1px 0 black,  0-1px 0 black,
+              -1px 0 0 black, 1px 0 0 black;
+}
+p {
+  text-align: left;
+  font-style: normal;
+  font-size: xx-large;
+  color: white;
+  text-shadow:1px 1px 0 black, -1px -1px 0 black,
+              -1px 1px 0 black, 1px -1px 0 black,
+              0px 1px 0 black,  0-1px 0 black,
+              -1px 0 0 black, 1px 0 0 black;
+}
+h3 {
+  text-align: center;
+  font-style: normal;
+  font-size: x-large;
+  color: white;
+  text-shadow:1px 1px 0 black, -1px -1px 0 black,
+              -1px 1px 0 black, 1px -1px 0 black,
+              0px 1px 0 black,  0-1px 0 black,
+              -1px 0 0 black, 1px 0 0 black;
+}

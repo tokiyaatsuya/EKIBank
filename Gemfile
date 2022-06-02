@@ -55,21 +55,21 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
+# ログイン機能
 gem 'devise'
-
+# Scraping(JS => NG)
 gem 'mechanize'
-
+# Scraping(JS => OK)
 gem 'webdrivers'
-
+# バッチ処理
 gem 'whenever', require: false
-
+# デバッグツール
 gem 'pry-rails'
-
+# Twitter API
 # gem 'twitter'
-
+# Google Places API使用
 gem 'google_places'
-
+# デバッグツール
 gem 'byebug'
-
+# 検索機能
 gem 'ransack'
