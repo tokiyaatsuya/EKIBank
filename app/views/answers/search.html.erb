@@ -1,35 +1,33 @@
 <body class="search-answers">  
   <%= stylesheet_pack_tag 'back_search', media: 'all', 'data-turbolinks-track': 'reload' %>
   <div class="container">
-    <div class="text-center">
-      <div class="style-adjust-search">
-        <h1>駅情報一覧</h1>
-        <table border="5" rules="all">
-          <thead>
+    <div class="style-adjust-search" style="width: 50%; margin: 0 auto;">
+      <h1>駅情報一覧</h1>
+      <table border="5" rules="all">
+        <thead>
+          <tr>
+            <th>駅名</th>
+            <th>間取り：家賃相場</th>
+            <th>スポーツジム</th>
+            <th>スターバックスコーヒー</th>
+            <th colspan="10"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @results.each do |result| %>
             <tr>
-              <th>駅名</th>
-              <th>間取り：家賃相場</th>
-              <th>スポーツジム</th>
-              <th>スターバックスコーヒー</th>
-              <th colspan="10"></th>
+              <td><%= result.station_name %></td>
+              <td><%= result.floor_plan %> : <%= result.market_price %>万円</td>
+              <td><%= result.gym %></td>
+              <td><%= result.starbucks_coffee %></td>
             </tr>
-          </thead>
-          <tbody>
-            <% @results.each do |result| %>
-              <tr>
-                <td><%= result.station_name %></td>
-                <td><%= result.floor_plan %> : <%= result.market_price %>万円</td>
-                <td><%= result.gym %></td>
-                <td><%= result.starbucks_coffee %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-        <br>
-        <!--'BACK'の実装を:backとするとスクレイピングが始まってしまうので、検索フォームだけのページを作成して呼び出す-->
-        <%= link_to 'BACK',  answers_back_search_path, class: "btn btn-secondary btn-lg" %>
-        <%= link_to 'EXIT', pages_show_path, class: "btn btn-secondary btn-lg" %>
-      </div>
+          <% end %>
+        </tbody>
+      </table>
+      <br>
+      <!--'BACK'の実装を:backとするとスクレイピングが始まってしまうので、検索フォームだけのページを作成して呼び出す-->
+      <%= link_to 'BACK',  answers_back_search_path, class: "btn btn-secondary btn-lg" %>
+      <%= link_to 'EXIT', pages_show_path, class: "btn btn-secondary btn-lg" %>
     </div>
   </div>
 </body>

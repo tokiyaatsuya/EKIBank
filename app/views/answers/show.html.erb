@@ -1,8 +1,7 @@
 <body class="answer-page">
   <%= stylesheet_pack_tag 'answers_show', media: 'all', 'data-turbolinks-track': 'reload' %>
   <div class="container">
-    <div class="text-center">
-      <div class="style-adjust-answer">
+      <div class="style-adjust-answer"  style="width: 50%; margin: 0 auto;">
         <h1>結果発表</h1>
         <!--ドンピシャの駅が存在すればその駅を表示する-->
         <% if @exactly_station.present? %>
@@ -20,24 +19,24 @@
         <br>
         <!--確認用(ユーザーが入力したパラメーターの内容を表示)-->
         <table border="5" rules="all">
-          <tr><th>希望予算</th><td><%= @rent_budget %>万円以下</td></tr>
-          <tr><th>希望間取り</th><td><%= @floor_plan %></td></tr>
-          <tr><th>目的地１</th><td><%= $destination_1 %>駅</td></tr>
-          <tr><th>所要時間１</th><td><%= $transit_time_1 %></td></tr>
-          <tr><th>目的地２</th><td><%= $destination_2 %>駅</td></tr>
-          <tr><th>所要時間２</th><td><%= $transit_time_2 %></td></tr>
-          <tr><th>希望エリア</th><td><%= @prefecture_to_live %></td></tr>
+          <tr><th width="240">希望予算</th><td width="480"><%= @rent_budget %>万円以下</td></tr>
+          <tr><th width="240">希望間取り</th><td width="480"><%= @floor_plan %></td></tr>
+          <tr><th width="240">目的地１</th><td width="480"><%= $destination_1 %>駅</td></tr>
+          <tr><th width="240">所要時間１</th><td width="480"><%= $transit_time_1 %></td></tr>
+          <tr><th width="240">目的地２</th><td width="480"><%= $destination_2 %>駅</td></tr>
+          <tr><th width="240">所要時間２</th><td width="480"><%= $transit_time_2 %></td></tr>
+          <tr><th width="240">希望エリア</th><td width="480"><%= @prefecture_to_live %></td></tr>
           <tr><!--三項演算子を使ってみる'条件 ? 式1 : 式2' true => 式1、false => 式2を実行-->
-          <tr><th>スポーツジム</th><td><%= @gym == "有り" ? "必須" : "必須ではない" %></td></tr>
-          <tr><th>スターバックスコーヒー</th><td><%= @starbucks_coffee == "有り" ? "必須" : "必須ではない" %></td></tr>
-          <tr><th>マクドナルド</th><td><%= @mcdonalds %></td></tr>
-          <tr><th>餃子の王将</th><td><%= @ohsho %></td></tr>
-          <tr><th>スーパー</th><td><%= @supermarket %></td></tr>
-          <tr><th>公園</th><td><%= @large_park %></td></tr>
-          <tr><th>図書館</th><td><%= @library %></td></tr>
-          <tr><th>銭湯・サウナ</th><td><%= @spa %></td></tr>
+          <tr><th width="240">スポーツジム</th><td width="480"><%= @gym == "有り" ? "必須" : "必須ではない" %></td></tr>
+          <tr><th width="240">スターバックスコーヒー</th><td width="480"><%= @starbucks_coffee == "有り" ? "必須" : "必須ではない" %></td></tr>
+          <tr><th width="240">マクドナルド</th><td width="480"><%= @mcdonalds %></td></tr>
+          <tr><th width="240">餃子の王将</th><td width="480"><%= @ohsho %></td></tr>
+          <tr><th width="240">スーパー</th><td width="480"><%= @supermarket %></td></tr>
+          <tr><th width="240">公園</th><td width="480"><%= @large_park %></td></tr>
+          <tr><th width="240">図書館</th><td width="480"><%= @library %></td></tr>
+          <tr><th width="240">銭湯・サウナ</th><td width="480"><%= @spa %></td></tr>
           <!--確認用(ユーザーが入力したdestination、transit_timeの内容からスクレイピングを行った結果の駅名の表示)-->
-          <tr><th>候補駅</th><td><%= $candidate_station %></td></tr>
+          <tr><th width="240">候補駅</th><td width="480"><%= $candidate_station %></td></tr>
         </table>
         <br>
         <!--駅名からの情報検索フォームを部分テンプレートで用意-->
@@ -45,6 +44,6 @@
         <br>
         <%= link_to 'EXIT', pages_show_path, class: "btn btn-secondary btn-lg" %>
       </div>
-    </div>
+    
   </div>
 </body>
