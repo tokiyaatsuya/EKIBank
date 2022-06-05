@@ -1,0 +1,1 @@
+import '../stylesheets/pages_show.scss';

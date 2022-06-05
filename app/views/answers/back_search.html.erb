@@ -1,5 +1,12 @@
 <!--一度駅名からの検索を行った後、戻って再検索したい場合、戻るとリアルタイムスクレイピングが再度動作してしまうので駅名検索フォームのみのページを用意-->
 <!--駅名からの情報検索フォームを部分テンプレートで用意-->
-<%= render 'layouts/search' %>
-<br>
-<%= link_to 'EXIT', pages_show_path %>
+<body class="back-search-station">
+  <%= stylesheet_pack_tag 'back_search', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <div class="container">
+    <div class="text-center">
+      <%= render 'layouts/search' %>
+      <br>
+      <%= link_to 'EXIT', pages_show_path, class: "btn btn-secondary btn-lg" %>
+    </div>
+  </div>
+</body>

@@ -1,20 +1,26 @@
-<h1>Q2</h1>
-<!--フォームに入力されたデータをDBへ保存しないので次の遷移ページにurlのパスを指定する-->
-<%= form_with url: show_3_questions_path do |form| %>
-  <!--questions_controllerで設定した@questions = Question.find(4,5)から指定した配列番号のcontentを表示する-->
-  <%= @questions[0]['content'] %><br>
-  <!--:destination_1はformで渡すデータのnameを指定する-->
-  <%= form.text_field :destination_1, :placeholder => '目的地最寄の駅名を入力してください　"東京" → OK、"東京駅" → NG', size: 60, class: 'form-control', required: true %><span>駅</span><br>
-<br>
-  <!--questions_controllerで設定した@questions = Question.find(4,5)から指定した配列番号のcontentを表示する-->
-  <%= @questions[1]['content'] %><br>
-  <!--:transit_time_1はformで渡すデータのnameを指定する。@answers_5にはAnswer.where(question_id: Q_05)が格納されている-->
-  <%= form.collection_select(:transit_time_1, @answers_5, :content, :content, {prompt: "目的駅までの希望する移動時間を選択してください"}, required: true) %><br>
-<br>
-  <%= form.submit 'NEXT', class: "btn btn-primary" %>
-<% end %>
-
-<%= link_to 'BACK', show_1_questions_path %><br>
-<br>
-<!--質問回答数をプログレスバーを部分テンプレート化して表示する-->
-<%= render partial: 'layouts/progress_bar', locals: { style: "width: 8.3%", text: "質問回答数 1/12 問" } %>
+<body class="questions-show-2">
+  <%= stylesheet_pack_tag 'questions_show_2', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <div class="container">
+    <div class="text-center">
+      <h1>Q2</h1>
+      <!--フォームに入力されたデータをDBへ保存しないので次の遷移ページにurlのパスを指定する-->
+      <%= form_with url: show_3_questions_path do |form| %>
+        <!--questions_controllerで設定した@questions = Question.find(4,5)から指定した配列番号のcontentを表示する-->
+        <p><%= @questions[0]['content'] %></p>
+        <!--:destination_1はformで渡すデータのnameを指定する-->
+        <h3><%= form.text_field :destination_1, :placeholder => '目的地最寄の駅名を入力してください　"東京" → OK、"東京駅" → NG', class: 'form-control', required: true %></h3>
+      <br>
+        <!--questions_controllerで設定した@questions = Question.find(4,5)から指定した配列番号のcontentを表示する-->
+        <p><%= @questions[1]['content'] %></p>
+        <!--:transit_time_1はformで渡すデータのnameを指定する。@answers_5にはAnswer.where(question_id: Q_05)が格納されている-->
+        <h3><%= form.collection_select(:transit_time_1, @answers_5, :content, :content, {prompt: "目的駅までの希望する移動時間を選択してください"}, required: true) %></h3>
+      <br>
+        <%= form.submit 'NEXT', class: "btn btn-warning btn-lg w-75" %>
+      <% end %>
+      <br>
+      <!--質問回答数をプログレスバーを部分テンプレート化して表示する-->
+      <p>質問回答数 1/12 問</p>
+      <%= render partial: 'layouts/progress_bar', locals: { style: "width: 8.3%" } %>
+    </div>
+  </div>
+</body>
