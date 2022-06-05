@@ -1,24 +1,26 @@
 // bootstrap
 @import '~bootstrap/scss/bootstrap';
+@import url('https://fonts.googleapis.com/css2?family=Cherry+Swash&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Quicksand');
 // ナビゲーションバー(ロゴ)
 a.navbar-brand {
-  font-style: normal;
-  font-size: xx-large;
+  font-family: 'Cherry Swash', cursive;
+  font-size: xxx-large;
   color: white;
-  text-shadow:1px 1px 0 black, -1px -1px 0 black,
-              -1px 1px 0 black, 1px -1px 0 black,
-              0px 1px 0 black,  0-1px 0 black,
-              -1px 0 0 black, 1px 0 0 black;
+  text-shadow:1.5px 1.5px 0 black, -1.5px -1.5px 0 black,
+              -1.5px 1.5px 0 black, 1.5px -1.5px 0 black,
+              0px 1.5px 0 black,  0-1.5px 0 black,
+              -1.5px 0 0 black, 1.5px 0 0 black;
 }
 // ナビゲーションバー(リンク)
 a.nav-link {
-  font-style: normal;
+  font-family: 'Cherry Swash', cursive;
   font-size: medium;
   color: white;
-  text-shadow:1px 1px 0 black, -1px -1px 0 black,
-              -1px 1px 0 black, 1px -1px 0 black,
-              0px 1px 0 black,  0-1px 0 black,
-              -1px 0 0 black, 1px 0 0 black;
+  text-shadow:1.5px 1.5px 0 black, -1.5px -1.5px 0 black,
+              -1.5px 1.5px 0 black, 1.5px -1.5px 0 black,
+              0px 1.5px 0 black,  0-1.5px 0 black,
+              -1.5px 0 0 black, 1.5px 0 0 black;
 }
 // textをど真ん中へ配置する
 .text-center {
@@ -31,47 +33,55 @@ a.nav-link {
 // textの縁取り加工
 h1 {
   text-align: left;
+  font-size: xxx-large;
+  font-family: "Tsukushi B Round Gothic","筑紫B丸ゴシック";
+  font-weight: bold;
   color: white;
-  text-shadow:1px 1px 0 black, -1px -1px 0 black,
-              -1px 1px 0 black, 1px -1px 0 black,
-              0px 1px 0 black,  0-1px 0 black,
-              -1px 0 0 black, 1px 0 0 black;
+  text-shadow:1.5px 1.5px 0 black, -1.5px -1.5px 0 black,
+              -1.5px 1.5px 0 black, 1.5px -1.5px 0 black,
+              0px 1.5px 0 black,  0-1.5px 0 black,
+              -1.5px 0 0 black, 1.5px 0 0 black;
 }
 h2 {
-  text-align: left;
+  text-align: center;
+  font-family: "Tsukushi B Round Gothic","筑紫B丸ゴシック";
+  font-weight: bold;
   color: white;
-  text-shadow:1px 1px 0 black, -1px -1px 0 black,
-              -1px 1px 0 black, 1px -1px 0 black,
-              0px 1px 0 black,  0-1px 0 black,
-              -1px 0 0 black, 1px 0 0 black;
+  text-shadow:1.5px 1.5px 0 black, -1.5px -1.5px 0 black,
+              -1.5px 1.5px 0 black, 1.5px -1.5px 0 black,
+              0px 1.5px 0 black,  0-1.5px 0 black,
+              -1.5px 0 0 black, 1.5px 0 0 black;
 }
 h3 {
   text-align: center;
-  font-style: normal;
-  font-size: x-large;
+  font-family: "Tsukushi B Round Gothic","筑紫B丸ゴシック";
+  font-weight: bold;
+  font-size: xx-large;
   color: white;
-  text-shadow:1px 1px 0 black, -1px -1px 0 black,
-              -1px 1px 0 black, 1px -1px 0 black,
-              0px 1px 0 black,  0-1px 0 black,
-              -1px 0 0 black, 1px 0 0 black;
+  text-shadow:1.5px 1.5px 0 black, -1.5px -1.5px 0 black,
+              -1.5px 1.5px 0 black, 1.5px -1.5px 0 black,
+              0px 1.5px 0 black,  0-1.5px 0 black,
+              -1.5px 0 0 black, 1.5px 0 0 black;
 }
 p {
   text-align: left;
-  font-style: normal;
-  font-size: xx-large;
+  font-family: "Tsukushi B Round Gothic","筑紫B丸ゴシック";
+  font-weight: bold;
+  font-size: xxx-large;
   color: white;
-  text-shadow:1px 1px 0 black, -1px -1px 0 black,
-              -1px 1px 0 black, 1px -1px 0 black,
-              0px 1px 0 black,  0-1px 0 black,
-              -1px 0 0 black, 1px 0 0 black;
+  text-shadow:1.5px 1.5px 0 black, -1.5px -1.5px 0 black,
+              -1.5px 1.5px 0 black, 1.5px -1.5px 0 black,
+              0px 1.5px 0 black,  0-1.5px 0 black,
+              -1.5px 0 0 black, 1.5px 0 0 black;
 }
 table {
   text-align: left;
-  font-style: normal;
+  font-family: "Tsukushi B Round Gothic","筑紫B丸ゴシック";
+  font-weight: bold;
   font-size: medium;
   color: white;
-  text-shadow:1px 1px 0 black, -1px -1px 0 black,
-              -1px 1px 0 black, 1px -1px 0 black,
-              0px 1px 0 black,  0-1px 0 black,
-              -1px 0 0 black, 1px 0 0 black;
+  text-shadow:1.5px 1.5px 0 black, -1.5px -1.5px 0 black,
+              -1.5px 1.5px 0 black, 1.5px -1.5px 0 black,
+              0px 1.5px 0 black,  0-1.5px 0 black,
+              -1.5px 0 0 black, 1.5px 0 0 black;
 }

@@ -10,7 +10,7 @@
         <!--:prefecture_to_liveはformで渡すデータのnameを指定する。@answers_19にはAnswer.where(question_id: Q_19)が格納されている-->
         <h3><%= form.collection_select(:prefecture_to_live, @answers_19, :content, :content, {prompt: "住みたいエリアを選択してください"}, required: true) %></h3>
       <br>
-        <%= form.submit 'NEXT', class: "btn btn-warning btn-lg" %>
+        <%= form.submit 'NEXT', class: "btn btn-warning btn-lg w-75" %>
       <% end %>
       <!--質問回答数をプログレスバーを部分テンプレート化して表示する-->
       <p>質問回答数 3/12 問</p>

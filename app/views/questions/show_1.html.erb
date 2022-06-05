@@ -15,7 +15,7 @@
             <!--:floor_planはformで渡すデータのnameを指定する。@answers_18にはAnswer.where(question_id: Q_18)が格納されている-->
             <h3><%= form.collection_select(:floor_plan, @answers_18, :content, :content, {prompt: "希望する間取りを選択してください"}, required: true) %></h3>
           <br>
-            <%= form.submit 'NEXT', id: "next_btn", class: "btn btn-warning btn-lg" %>
+            <%= form.submit 'NEXT', id: "next_btn", class: "btn btn-warning btn-lg w-75" %>
       <% end %>
       <br>
       <!--質問回答数をプログレスバーを部分テンプレート化して表示する-->

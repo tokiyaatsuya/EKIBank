@@ -10,7 +10,7 @@
         <!--:supermarketはformで渡すデータのnameを指定する。@answers_14にはAnswer.where(question_id: Q_14)が格納されている-->
         <h3><%= form.collection_select(:supermarket, @answers_14, :content, :content, {prompt: "どちらか選択してください"}, required: true) %></h3>
       <br>
-        <%= form.submit 'NEXT', class: "btn btn-warning btn-lg" %>
+        <%= form.submit 'NEXT', class: "btn btn-warning btn-lg w-75" %>
       <% end %>
       <br>
       <!--質問回答数をプログレスバーを部分テンプレート化して表示する-->

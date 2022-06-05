@@ -2,11 +2,12 @@
   <%= stylesheet_pack_tag 'pages_show', media: 'all', 'data-turbolinks-track': 'reload' %>
   <div class="container">
     <div class="text-center">
-      <p>ようこそ【<%= current_user.username %>】さん</p>
-      <p>EKIBankは引越しをお考えのあなたに最適の『駅』を提案します!</p>
-      <p>それでは早速始めましょう!!</p>
+      <p>ようこそ <%= current_user.username %> さん</p>
+      <p>EKIBankは引越しをお考えのあなたに最適の</p>
+      <p>『駅』を提案します!</p>
+      <p>それでは始めましょう!!</p>
       <br>
-      <%= link_to 'START', show_1_questions_path, class: "btn btn-warning btn-lg" %>
+      <%= link_to 'S T A R T', show_1_questions_path, class: "btn btn-warning btn-lg w-75" %>
     </div>
   </div>
 </body>

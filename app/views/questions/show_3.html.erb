@@ -8,14 +8,14 @@
         <!--questions_controllerで設定した@questions = Question.find(6,7)から指定した配列番号のcontentを表示する-->
         <p><%= @questions[0]['content'] %></p>
         <!--:destination_2はformで渡すデータのnameを指定する-->
-        <h3><%= form.text_field :destination_2, :placeholder => '目的地最寄の駅名を入力してください　"東京" → OK、"東京駅" → NG', size: 60, class: 'form-control', required: true %>駅</h3>
+        <h3><%= form.text_field :destination_2, :placeholder => '目的地最寄の駅名を入力してください　"東京" → OK、"東京駅" → NG', class: 'form-control', required: true %></h3>
       <br>
         <!--questions_controllerで設定した@questions = Question.find(6,7)から指定した配列番号のcontentを表示する-->
         <p><%= @questions[1]['content'] %></p>
         <!--:transit_time_2はformで渡すデータのnameを指定する。@answers_7にはAnswer.where(question_id: Q_07)が格納されている-->
         <h3><%= form.collection_select(:transit_time_2, @answers_7, :content, :content, {prompt: "目的駅までの希望する移動時間を選択してください"}, required: true) %></h3>
       <br>
-        <%= form.submit 'NEXT', class: "btn btn-warning btn-lg" %>
+        <%= form.submit 'NEXT', class: "btn btn-warning btn-lg w-75" %>
       <% end %>
       <br>
       <!--質問回答数をプログレスバーを部分テンプレート化して表示する-->
