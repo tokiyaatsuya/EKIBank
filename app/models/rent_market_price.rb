@@ -3030,4 +3030,24 @@ class RentMarketPrice < ApplicationRecord
       record.save
     end
   end
+  # mcdonalds
+  def self.google_places_mcdonalds
+    # APIを扱うクラスのインスタンスを用意する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    # RentMarketPriceテーブルの全レコードを取得する
+    records = RentMarketPrice.all
+    # records = RentMarketPrice.where(id: 1899..)
+    # レコードごとにループを回す
+    records.each do |record|
+      # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
+      mcdonalds = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'マクドナルド')
+      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でstarbucks_coffeeカラムに保存する
+      if mcdonalds.present?
+        record.mcdonalds = "有り"
+      elsif !mcdonalds.present?
+        record.mcdonalds = "無し"
+      end
+      record.save
+    end
+  end
 end

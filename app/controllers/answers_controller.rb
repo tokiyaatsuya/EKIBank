@@ -11,7 +11,7 @@ class AnswersController < ApplicationController
     # 三項演算子を使ってみる'条件 ? 式1 : 式2' true => 式1、false => 式2を実行
     @gym = session[:gym] == "必須" ? "有り" : ["有り", "無し"]
     @starbucks_coffee = session[:starbucks_coffee] == "必須" ? "有り" : ["有り", "無し"]
-    @mcdonalds = session[:mcdonalds]
+    @mcdonalds = session[:mcdonalds] == "必須" ? "有り" : ["有り", "無し"]
     @ohsho = session[:ohsho]
     @supermarket = session[:supermarket]
     @large_park = session[:large_park]
@@ -42,7 +42,11 @@ class AnswersController < ApplicationController
     else
       # 候補として取得した駅名$candidate_stationと希望する各条件を併せてwhereメソッドを使ってdbへデータの参照を行う
       # uniq!メソッドで配列内の重複要素を除去し直す
-      infomations = RentMarketPrice.where(station_name: $candidate_station.uniq!).and(RentMarketPrice.where("(market_price <= ?) AND (floor_plan = ?)", @rent_budget, @floor_plan)).and(RentMarketPrice.where(gym: @gym)).and(RentMarketPrice.where(starbucks_coffee: @starbucks_coffee))
+      infomations = RentMarketPrice.where(station_name: $candidate_station.uniq!).and(
+                    RentMarketPrice.where("(market_price <= ?) AND (floor_plan = ?)", @rent_budget, @floor_plan)).and(
+                    RentMarketPrice.where(gym: @gym)).and(
+                    RentMarketPrice.where(starbucks_coffee: @starbucks_coffee)).and(
+                    RentMarketPrice.where(mcdonalds: @mcdonalds))
       @exactly_station = []
       # db参照の結果を出力する
       infomations.each do |info|
