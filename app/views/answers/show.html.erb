@@ -29,7 +29,7 @@
           <tr><!--三項演算子を使ってみる'条件 ? 式1 : 式2' true => 式1、false => 式2を実行-->
           <tr><th width="240">スポーツジム</th><td width="480"><%= @gym == "有り" ? "必須" : "必須ではない" %></td></tr>
           <tr><th width="240">スターバックスコーヒー</th><td width="480"><%= @starbucks_coffee == "有り" ? "必須" : "必須ではない" %></td></tr>
-          <tr><th width="240">マクドナルド</th><td width="480"><%= @mcdonalds %></td></tr>
+          <tr><th width="240">マクドナルド</th><td width="480"><%= @mcdonalds == "有り" ? "必須" : "必須ではない" %></td></tr>
           <tr><th width="240">餃子の王将</th><td width="480"><%= @ohsho %></td></tr>
           <tr><th width="240">スーパー</th><td width="480"><%= @supermarket %></td></tr>
           <tr><th width="240">公園</th><td width="480"><%= @large_park %></td></tr>

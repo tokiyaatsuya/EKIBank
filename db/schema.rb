@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_05_144543) do
+ActiveRecord::Schema.define(version: 2022_06_06_032310) do
 
   create_table "answers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "question_id"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2022_05_05_144543) do
     t.float "geocode_longitude", limit: 53
     t.string "gym"
     t.string "starbucks_coffee"
+    t.string "mcdonalds"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
