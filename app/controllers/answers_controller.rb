@@ -44,9 +44,7 @@ class AnswersController < ApplicationController
       # uniq!メソッドで配列内の重複要素を除去し直す
       infomations = RentMarketPrice.where(station_name: $candidate_station.uniq!).and(
                     RentMarketPrice.where("(market_price <= ?) AND (floor_plan = ?)", @rent_budget, @floor_plan)).and(
-                    RentMarketPrice.where(gym: @gym)).and(
-                    RentMarketPrice.where(starbucks_coffee: @starbucks_coffee)).and(
-                    RentMarketPrice.where(mcdonalds: @mcdonalds))
+                    RentMarketPrice.where(gym: @gym, starbucks_coffee: @starbucks_coffee, mcdonalds: @mcdonalds))
       @exactly_station = []
       # db参照の結果を出力する
       infomations.each do |info|
