@@ -12,7 +12,7 @@ class AnswersController < ApplicationController
     @gym = session[:gym] == "必須" ? "有り" : ["有り", "無し"]
     @starbucks_coffee = session[:starbucks_coffee] == "必須" ? "有り" : ["有り", "無し"]
     @mcdonalds = session[:mcdonalds] == "必須" ? "有り" : ["有り", "無し"]
-    @ohsho = session[:ohsho]
+    @ohsho = session[:ohsho] == "必須" ? "有り" : ["有り", "無し"]
     @supermarket = session[:supermarket]
     @large_park = session[:large_park]
     @library = session[:library]
@@ -44,7 +44,7 @@ class AnswersController < ApplicationController
       # uniq!メソッドで配列内の重複要素を除去し直す
       infomations = RentMarketPrice.where(station_name: $candidate_station.uniq!).and(
                     RentMarketPrice.where("(market_price <= ?) AND (floor_plan = ?)", @rent_budget, @floor_plan)).and(
-                    RentMarketPrice.where(gym: @gym, starbucks_coffee: @starbucks_coffee, mcdonalds: @mcdonalds))
+                    RentMarketPrice.where(gym: @gym, starbucks_coffee: @starbucks_coffee, mcdonalds: @mcdonalds, ohsho: @ohsho))
       @exactly_station = []
       # db参照の結果を出力する
       infomations.each do |info|
