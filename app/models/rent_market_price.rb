@@ -5,11 +5,6 @@ class RentMarketPrice < ApplicationRecord
   require 'webdrivers'
   # require 'twitter'
   attr_reader :destination_1, :destination_2, :transit_time_1, :transit_time_2
-  # GooglePlacesAPIを使用する際のインスタンスの作成をbefore_actionで定義する
-  before_action :set_client, only: [:get_geocode, :google_places_gym,
-                                    :google_places_starbucks_coffee, 
-                                    :google_places_mcdonalds,
-                                    :google_places_ohsho]
 
   # 変数の定義
   # 各一都三県が保有する沿線一覧のリンク先
@@ -2927,67 +2922,57 @@ class RentMarketPrice < ApplicationRecord
   #     puts tweet.text
   #   end
   # end
-  # Places APIの動作時に必要な駅のgeocode(座標)を取得してdbへ保存する(スクレイピングの動作が安定しないのと、Places APIで座標が必須ではなかったので今回は採用しません)
-  # def self.get_geocoding
-  #   # option設定(スクレイピングブラウザの非表示)
-  #   options = Selenium::WebDriver::Chrome::Options.new
-  #   options.add_argument('--headless')
-  #   # Seleniumの起動
-  #   driver = Selenium::WebDriver.for :chrome, options: options
-  #   # driverに待機時間を指示
-  #   wait = Selenium::WebDriver::Wait.new(:timeout => 10)
-  #   # RentMarketPriceテーブルの全レコードを取得する
-  #   records = RentMarketPrice.all
-  #   # 1つのレコードごとにループ処理を行って、その中でスクレイピング時に駅名の使用と、取得した座標の値の座標カラムへの追加をレコードごとに行なっていく
-  #   records.each do |record|
-  #     # 最初の遷移先の指定
-  #     driver.get "https://www.geocoding.jp/api/"
-  #     # formの要素を取得
-  #     form = driver.find_element(:xpath, '//*[@id="searchbox"]')
-  #     # formにループで回しているレコードの駅名を取得して入力する
-  #     form.send_keys record.station_name+"駅"
-  #     # 前の駅名情報が残ってしまっていると嫌なので、あえて一度クリアして再度駅名を入力する
-  #     form.clear
-  #     form.send_keys record.station_name+"駅"
-  #     # 検索開始ボタンの要素取得とボタンのクリック
-  #     driver.find_element(:xpath, '/html/body/div/center/div[3]/form/div[2]/input[1]').click
-  #     sleep(1)
-  #     # 検索結果が表示されたページで座標の要素を取得する(数値だけ取り出せなかったのでこの後に削ぎ落とす)
-  #     elements = driver.find_elements(:id, 'folder1')
-  #     elements.each do |element|
-  #       # latitude(緯度) タグの中身を必要な数値だけ取り出す
-  #       latitude_head = element.text.index("<lat>")
-  #       latitude_end = element.text.index("</lat>")
-  #       # 削ぎ落とした緯度の数値だけをループで回しているレコードの緯度カラムへ格納する
-  #       record.geocode_latitude = element.text.slice(latitude_head+5..latitude_end-1)
-  #       # puts latitude # 動作確認用
-  #       # longitude(経度) タグの中身を必要な数値だけ取り出す
-  #       longitude_head = element.text.index("<lng>")
-  #       longitude_end = element.text.index("</lng>")
-  #       # 削ぎ落とした緯度の数値だけをループで回しているレコードの経度カラムへ格納する
-  #       record.geocode_longitude = element.text.slice(longitude_head+5..longitude_end-1)
-  #       # puts longitude # 動作確認用
-  #       record.save
-  #     end
-  #     # サイト運営者より検索は10秒に1件くらいにしてほしいと但し書きあり
-  #     sleep(10)
-  #   end
-  # end
 
   # Google Places API
-  # Google Places APIで共通するclientの設定をbefore_actionでセットする
-  def set_client
-    @client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+  # test
+  def self.gpa_test
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    infomations = client.spots_by_query("武蔵小山駅", :language => 'ja')
+    infomations.select do |geocode|
+      @latitude = geocode.lat
+      @longitude = geocode.lng
+    end
+    # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する。今回は:detail => trueを追加して施設の詳細情報を取得する
+    supermarkets = client.spots(@latitude, @longitude, :radius => 200, :language => 'ja', :name => 'スーパーマーケット', :detail => true)
+    # 取得した複数のスーパーを一つずつセレクトする
+    supermarkets.select do |supermarket|
+      # スーパーごとの営業時間に関する要素を取得しelementsに格納する
+      elements = supermarket.opening_hours.values[1]
+      # 営業時間に関する要素から曜日ごとの閉店時間の要素を取得しclose_timesへ格納する
+      elements.select do |close|
+        # ハッシュキーがcloseの時間要素だけを取り出してclose_timesに格納する
+        close_times = close.values
+        # 取得されたスーパーごとの閉店時間要素の中で閉店時間が23:30,00:00,00:30,1:00,2:00,3:00の場合は"有り"、それ以外を"無し"としてレコードに保存する
+        close_times.each do |close_time|
+          if close_time.values[1] == "2330"
+            puts "有り"
+          elsif close_time.values[1] == "0000"
+            puts "有り"
+          elsif close_time.values[1] == "0030"
+            puts "有り"
+          elsif close_time.values[1] == "0100"
+            puts "有り"
+          elsif close_time.values[1] == "0200"
+            puts "有り"
+          elsif close_time.values[1] == "0300"
+            puts "有り"
+          else
+            puts "無し"
+          end
+        end
+      end
+    end
   end
   # geocode
   def self.get_geocode
-    # before_actionでAPIを扱うクラスのインスタンス@clientがセットされる
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
     # RentMarketPriceテーブルの全レコードを取得する
     records = RentMarketPrice.all
     # レコードごとにループを回す
     records.each do |record|
       # レコードから駅名を取り出し、その駅のリクエストを送り情報を検索して座標(緯度・経度)を取得する
-      infomations = @client.spots_by_query("#{record.station_name}駅", :language => 'ja') # 式展開はダブルクォーテーション
+      infomations = client.spots_by_query("#{record.station_name}駅", :language => 'ja') # 式展開はダブルクォーテーション
       # 取得した情報の中から緯度と経度の情報を取得してレコードに保存する
       infomations.select do |geocode|
         # 緯度の取得
@@ -3000,14 +2985,15 @@ class RentMarketPrice < ApplicationRecord
   end
   # gym
   def self.google_places_gym
-    # before_actionでAPIを扱うクラスのインスタンス@clientがセットされる
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
     # RentMarketPriceテーブルの全レコードを取得する
     records = RentMarketPrice.all
     # records = RentMarketPrice.where(id: 1899..)
     # レコードごとにループを回す
     records.each do |record|
       # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
-      gyms = @client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'フィットネスジム')
+      gyms = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'フィットネスジム')
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でgymカラムに保存する
       if gyms.present?
         record.gym = "有り"
@@ -3019,14 +3005,15 @@ class RentMarketPrice < ApplicationRecord
   end
   # starbucks_coffee
   def self.google_places_starbucks_coffee
-    # before_actionでAPIを扱うクラスのインスタンス@clientがセットされる
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
     # RentMarketPriceテーブルの全レコードを取得する
     records = RentMarketPrice.all
     # records = RentMarketPrice.where(id: 1899..)
     # レコードごとにループを回す
     records.each do |record|
       # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
-      starbucks_coffees = @client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'スターバックスコーヒー')
+      starbucks_coffees = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'スターバックスコーヒー')
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でstarbucks_coffeeカラムに保存する
       if starbucks_coffees.present?
         record.starbucks_coffee = "有り"
@@ -3038,15 +3025,16 @@ class RentMarketPrice < ApplicationRecord
   end
   # mcdonalds
   def self.google_places_mcdonalds
-    # before_actionでAPIを扱うクラスのインスタンス@clientがセットされる
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
     # RentMarketPriceテーブルの全レコードを取得する
     records = RentMarketPrice.all
     # records = RentMarketPrice.where(id: 1899..)
     # レコードごとにループを回す
     records.each do |record|
       # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
-      mcdonalds = @client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'マクドナルド')
-      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でstarbucks_coffeeカラムに保存する
+      mcdonalds = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'マクドナルド')
+      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でmcdonaldsカラムに保存する
       if mcdonalds.present?
         record.mcdonalds = "有り"
       elsif !mcdonalds.present?
@@ -3057,19 +3045,82 @@ class RentMarketPrice < ApplicationRecord
   end
   # ohsho
   def self.google_places_ohsho
-    # before_actionでAPIを扱うクラスのインスタンス@clientがセットされる
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
     # RentMarketPriceテーブルの全レコードを取得する
     records = RentMarketPrice.all
     # records = RentMarketPrice.where(id: 1899..)
     # レコードごとにループを回す
     records.each do |record|
       # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
-      ohsho = @client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => '餃子の王将')
-      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でstarbucks_coffeeカラムに保存する
+      ohsho = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => '餃子の王将')
+      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"ohshoでカラムに保存する
       if ohsho.present?
         record.ohsho = "有り"
       elsif !ohsho.present?
         record.ohsho = "無し"
+      end
+      record.save
+    end
+  end
+  # supermarket
+  #def self.google_places_supermarket
+  #  # APIを扱うクラスのインスタンスを定義する
+  #  client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+  #  # RentMarketPriceテーブルの全レコードを取得する
+  #  records = RentMarketPrice.all
+  #  # records = RentMarketPrice.where(id: 1899..)
+  #  # レコードごとにループを回す
+  #  records.each do |record|
+  #    # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する。今回は:detail => trueを追加して施設の詳細情報を取得する
+  #    supermarkets = client.spots(@latitude, @longitude, :radius => 200, :language => 'ja', :name => 'スーパーマーケット', :detail => true)
+  #    # 取得した複数のスーパーを一つずつセレクトする
+  #    supermarkets.select do |supermarket|
+  #      # スーパーごとの営業時間に関する要素を取得しelementsに格納する
+  #      elements = supermarket.opening_hours.values[1]
+  #      # 営業時間に関する要素から曜日ごとの閉店時間の要素を取得しclose_timesへ格納する
+  #      elements.select do |close|
+  #        # ハッシュキーがcloseの時間要素だけを取り出してclose_timesに格納する
+  #        close_times = close.values
+  #        # 取得されたスーパーごとの閉店時間要素の中で閉店時間が23:30,00:00,00:30,1:00,2:00,3:00の場合は"有り"、それ以外を"無し"としてレコードに保存する
+  #        close_times.each do |close_time|
+  #          if close_time.values[1] == "2330"
+  #            record.supermarket = "有り"
+  #          elsif close_time.values[1] == "0000"
+  #            record.supermarket = "有り"
+  #          elsif close_time.values[1] == "0030"
+  #            record.supermarket = "有り"
+  #          elsif close_time.values[1] == "0100"
+  #            record.supermarket = "有り"
+  #          elsif close_time.values[1] == "0200"
+  #            record.supermarket = "有り"
+  #          elsif close_time.values[1] == "0300"
+  #            record.supermarket = "有り"
+  #          else
+  #            record.supermarket = "無し"
+  #          end
+  #        end
+  #      end
+  #    end
+  #    record.save
+  #  end
+  #end
+  # large_park
+  def self.google_places_large_park
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    # RentMarketPriceテーブルの全レコードを取得する
+    records = RentMarketPrice.all
+    # records = RentMarketPrice.where(id: 1899..)
+    # レコードごとにループを回す
+    records.each do |record|
+      # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
+      large_park = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 500, :language => 'ja', :name => 'ピクニック広場')
+      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でlarge_parkカラムに保存する
+      if large_park.present?
+        record.large_park = "有り"
+      elsif !large_park.present?
+        record.large_park = "無し"
       end
       record.save
     end

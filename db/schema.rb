@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_07_101458) do
+ActiveRecord::Schema.define(version: 2022_06_11_053349) do
 
   create_table "answers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "question_id"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2022_06_07_101458) do
     t.string "starbucks_coffee"
     t.string "mcdonalds"
     t.string "ohsho"
+    t.string "large_park"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
