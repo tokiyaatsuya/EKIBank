@@ -2925,44 +2925,38 @@ class RentMarketPrice < ApplicationRecord
 
   # Google Places API
   # test
-  def self.gpa_test
-    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
-    infomations = client.spots_by_query("武蔵小山駅", :language => 'ja')
-    infomations.select do |geocode|
-      @latitude = geocode.lat
-      @longitude = geocode.lng
-    end
-    # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する。今回は:detail => trueを追加して施設の詳細情報を取得する
-    supermarkets = client.spots(@latitude, @longitude, :radius => 200, :language => 'ja', :name => 'スーパーマーケット', :detail => true)
-    # 取得した複数のスーパーを一つずつセレクトする
-    supermarkets.select do |supermarket|
-      # スーパーごとの営業時間に関する要素を取得しelementsに格納する
-      elements = supermarket.opening_hours.values[1]
-      # 営業時間に関する要素から曜日ごとの閉店時間の要素を取得しclose_timesへ格納する
-      elements.select do |close|
-        # ハッシュキーがcloseの時間要素だけを取り出してclose_timesに格納する
-        close_times = close.values
-        # 取得されたスーパーごとの閉店時間要素の中で閉店時間が23:30,00:00,00:30,1:00,2:00,3:00の場合は"有り"、それ以外を"無し"としてレコードに保存する
-        close_times.each do |close_time|
-          if close_time.values[1] == "2330"
-            puts "有り"
-          elsif close_time.values[1] == "0000"
-            puts "有り"
-          elsif close_time.values[1] == "0030"
-            puts "有り"
-          elsif close_time.values[1] == "0100"
-            puts "有り"
-          elsif close_time.values[1] == "0200"
-            puts "有り"
-          elsif close_time.values[1] == "0300"
-            puts "有り"
-          else
-            puts "無し"
-          end
-        end
-      end
-    end
-  end
+  ###def self.gpa_test
+  ###  client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+  ###  infomations = client.spots_by_query("武蔵小山駅", :language => 'ja')
+  ###  infomations.select do |geocode|
+  ###    @latitude = geocode.lat
+  ###    @longitude = geocode.lng
+  ###  end
+  ###  # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する。今回は:detail => trueを追加して施設の詳細情報を取得する
+  ###  supermarkets = client.spots(@latitude, @longitude, :radius => 200, :language => 'ja', :name => 'スーパーマーケット', :detail => true)
+  ###  # 最後の判定に使う空の配列を用意
+  ###  closing_times =[]
+  ###  # 取得した複数のスーパーを一つずつループさせる
+  ###  supermarkets.each do |supermarket|
+  ###    # スーパーごとの営業日・営業時間に関する要素を取得しopening_day_timesに格納する
+  ###    # opening_day_timesはArrayクラス
+  ###    opening_day_times = supermarket.opening_hours.values[1]
+  ###    # スーパーごとの営業日・営業時間に関する要素から曜日ごとの開店時間・閉店時間が一つになっている配列から曜日ごとの閉店時間をday_closing_timesへ格納する
+  ###    opening_day_times.select do |day_time|
+  ###      # day_time.values[0]はHashクラス
+  ###      day_closing_times = day_time.values[0]
+  ###      # 単純な閉店時間だけの要素を空の配列closing_timesへ格納する
+  ###      # day_closing_times.values[1]はStringクラス
+  ###      closing_times << day_closing_times.values[1]
+  ###    end
+  ###  end
+  ###  # 取得されたスーパーごとの閉店時間要素の中で閉店時間が23:30,00:00,00:30,1:00,2:00,3:00の場合は"有り"、それ以外を"無し"としてレコードに保存する
+  ###  if ["2330", "0000", "0030", "0100", "0200", "0300"].any? { |i| closing_times.include?(i) }
+  ###    puts "aaaa"
+  ###  else
+  ###    puts "zzzz"
+  ###  end
+  ###end
   # geocode
   def self.get_geocode
     # APIを扱うクラスのインスタンスを定義する
@@ -3064,47 +3058,44 @@ class RentMarketPrice < ApplicationRecord
     end
   end
   # supermarket
-  #def self.google_places_supermarket
-  #  # APIを扱うクラスのインスタンスを定義する
-  #  client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
-  #  # RentMarketPriceテーブルの全レコードを取得する
-  #  records = RentMarketPrice.all
-  #  # records = RentMarketPrice.where(id: 1899..)
-  #  # レコードごとにループを回す
-  #  records.each do |record|
-  #    # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する。今回は:detail => trueを追加して施設の詳細情報を取得する
-  #    supermarkets = client.spots(@latitude, @longitude, :radius => 200, :language => 'ja', :name => 'スーパーマーケット', :detail => true)
-  #    # 取得した複数のスーパーを一つずつセレクトする
-  #    supermarkets.select do |supermarket|
-  #      # スーパーごとの営業時間に関する要素を取得しelementsに格納する
-  #      elements = supermarket.opening_hours.values[1]
-  #      # 営業時間に関する要素から曜日ごとの閉店時間の要素を取得しclose_timesへ格納する
-  #      elements.select do |close|
-  #        # ハッシュキーがcloseの時間要素だけを取り出してclose_timesに格納する
-  #        close_times = close.values
-  #        # 取得されたスーパーごとの閉店時間要素の中で閉店時間が23:30,00:00,00:30,1:00,2:00,3:00の場合は"有り"、それ以外を"無し"としてレコードに保存する
-  #        close_times.each do |close_time|
-  #          if close_time.values[1] == "2330"
-  #            record.supermarket = "有り"
-  #          elsif close_time.values[1] == "0000"
-  #            record.supermarket = "有り"
-  #          elsif close_time.values[1] == "0030"
-  #            record.supermarket = "有り"
-  #          elsif close_time.values[1] == "0100"
-  #            record.supermarket = "有り"
-  #          elsif close_time.values[1] == "0200"
-  #            record.supermarket = "有り"
-  #          elsif close_time.values[1] == "0300"
-  #            record.supermarket = "有り"
-  #          else
-  #            record.supermarket = "無し"
-  #          end
-  #        end
-  #      end
-  #    end
-  #    record.save
-  #  end
-  #end
+  def self.google_places_supermarket
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    # RentMarketPriceテーブルの全レコードを取得する
+    records = RentMarketPrice.all
+    # records = RentMarketPrice.where(id: 1899..)
+    # レコードごとにループを回す
+    records.each do |record|
+      # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する。今回は:detail => trueを追加して施設の詳細情報を取得する
+      supermarkets = client.spots(@latitude, @longitude, :radius => 200, :language => 'ja', :name => 'スーパーマーケット', :detail => true)
+      # そもそも検索範囲にスーパーがあるかないかを判定する
+      if supermarkets.present?
+        # 最後の判定に使う空の配列を用意
+        closing_times =[]
+        # 取得した複数のスーパーを一つずつループさせる
+        supermarkets.each do |supermarket|
+          # スーパーごとの営業日・営業時間に関する要素を取得しopening_day_timesに格納する
+          opening_day_times = supermarket.opening_hours.values[1] # opening_day_timesはArrayクラス
+          # スーパーごとの営業日・営業時間に関する要素から曜日ごとの開店時間・閉店時間が一つになっている配列から曜日ごとの閉店時間をday_closing_timesへ格納する
+          opening_day_times.select do |day_time|
+            day_closing_times = day_time.values[0] # day_time.values[0]はHashクラス
+            # 単純な閉店時間だけの要素を空の配列closing_timesへ格納する
+            closing_times << day_closing_times.values[1] # day_closing_times.values[1]はStringクラス
+          end
+        end
+        # 取得されたスーパーごとの閉店時間要素の中で閉店時間が23:30,00:00,00:30,1:00,2:00,3:00の場合は"有り"、それ以外を"無し"としてレコードに保存する
+        if ["2330", "0000", "0030", "0100", "0200", "0300"].any? { |i| closing_times.include?(i) }
+          record.supermarket = "有り"
+        else
+          record.supermarket = "無し"
+        end
+      # 検索範囲内にスーパーマーケットが存在しなければレコードに"無し"を格納する
+      elsif !supermarkets.present?
+        record.supermarket = "無し"
+      end
+      record.save
+    end
+  end
   # large_park
   def self.google_places_large_park
     # APIを扱うクラスのインスタンスを定義する
