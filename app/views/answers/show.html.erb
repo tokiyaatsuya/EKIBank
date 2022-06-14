@@ -33,7 +33,7 @@
           <tr><th width="240">餃子の王将</th><td width="480"><%= @ohsho == "有り" ? "必須" : "必須ではない" %></td></tr>
           <tr><th width="240">スーパーマーケット</th><td width="480"><%= @supermarket %></td></tr>
           <tr><th width="240">大きな公園</th><td width="480"><%= @large_park == "有り" ? "必須" : "必須ではない" %></td></tr>
-          <tr><th width="240">図書館</th><td width="480"><%= @library %></td></tr>
+          <tr><th width="240">図書館</th><td width="480"><%= @library == "有り" ? "必須" : "必須ではない" %></td></tr>
           <tr><th width="240">銭湯・サウナ</th><td width="480"><%= @spa %></td></tr>
           <!--確認用(ユーザーが入力したdestination、transit_timeの内容からスクレイピングを行った結果の駅名の表示)-->
           <tr><th width="240">候補駅</th><td width="480"><%= $candidate_station %></td></tr>
