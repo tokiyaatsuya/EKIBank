@@ -12,3 +12,21 @@
   margin: 0 auto;
   text-align: center !important;
 }
+// table表示をスクロールできるようにする
+.table-cell {
+  height: 500px;
+  overflow: auto;
+}
+// table内のスクロールで固定する場所を決める
+.scroll-fix-head {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(to bottom, #CD853F, #D2B48C, #DEB887, Transparent);
+  z-index: 2;
+}
+.scroll-fix-station {
+  position: sticky;
+  left: 0;
+  background: linear-gradient(to right, #CD853F, #D2B48C, #DEB887, Transparent);
+  z-index: 1;
+}

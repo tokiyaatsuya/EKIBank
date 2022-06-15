@@ -2,34 +2,37 @@
   <%= stylesheet_pack_tag 'back_search', media: 'all', 'data-turbolinks-track': 'reload' %>
   <div class="container">
     <div class="style-adjust-search">
-      <h1>駅情報一覧</h1>
-      <table border="5" rules="all">
-        <thead>
-          <tr>
-            <th>駅名</th>
-            <th>間取り：家賃相場</th>
-            <th>スポーツジム</th>
-            <th>スターバックスコーヒー</th>
-            <th>マクドナルド</th>
-            <th>餃子の王将</th>
-            <th>大きな公園</th>
-            <th colspan="10"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @results.each do |result| %>
-            <tr>
-              <td><%= result.station_name %></td>
-              <td><%= result.floor_plan %> : <%= result.market_price %>万円</td>
-              <td><%= result.gym %></td>
-              <td><%= result.starbucks_coffee %></td>
-              <td><%= result.mcdonalds %></td>
-              <td><%= result.ohsho %></td>
-              <td><%= result.large_park %></td>
+      <h1 class="fix-scroll">駅情報一覧</h1>
+      <div class="table-cell">
+        <table rules="all">
+          <thead>
+            <tr class="scroll-fix-head">
+              <th class="scroll-fix-station" nowrap>駅名</th>
+              <th nowrap>間取り：家賃相場</th>
+              <th nowrap>スポーツジム</th>
+              <th nowrap>スターバックスコーヒー</th>
+              <th nowrap>マクドナルド</th>
+              <th nowrap>餃子の王将</th>
+              <th nowrap>大きな公園</th>
+              <th nowrap>図書館</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% @results.each do |result| %>
+              <tr>
+                <td class="scroll-fix-station" nowrap><%= result.station_name %></td>
+                <td nowrap><%= result.floor_plan %> : <%= result.market_price %>万円</td>
+                <td nowrap><%= result.gym %></td>
+                <td nowrap><%= result.starbucks_coffee %></td>
+                <td nowrap><%= result.mcdonalds %></td>
+                <td nowrap><%= result.ohsho %></td>
+                <td nowrap><%= result.large_park %></td>
+                <td nowrap><%= result.library %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
       <br>
       <!--'BACK'の実装を:backとするとスクレイピングが始まってしまうので、検索フォームだけのページを作成して呼び出す-->
       <%= link_to 'BACK',  answers_back_search_path, class: "btn btn-secondary btn-lg" %>

@@ -3105,13 +3105,33 @@ class RentMarketPrice < ApplicationRecord
     # records = RentMarketPrice.where(id: 1899..)
     # レコードごとにループを回す
     records.each do |record|
-      # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
+      # レコードに保存されている座標を代入して検索中の駅の半径500m以内の施設を検索する
       large_park = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 500, :language => 'ja', :name => 'ピクニック広場')
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でlarge_parkカラムに保存する
       if large_park.present?
         record.large_park = "有り"
       elsif !large_park.present?
         record.large_park = "無し"
+      end
+      record.save
+    end
+  end
+  # library
+  def self.google_places_library
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    # RentMarketPriceテーブルの全レコードを取得する
+    records = RentMarketPrice.all
+    # records = RentMarketPrice.where(id: 5862..)
+    # レコードごとにループを回す
+    records.each do |record|
+      # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
+      library = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => '図書館')
+      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でlarge_parkカラムに保存する
+      if library.present?
+        record.library = "有り"
+      elsif !library.present?
+        record.library = "無し"
       end
       record.save
     end
