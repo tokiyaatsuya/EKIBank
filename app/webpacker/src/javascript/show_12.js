@@ -1,9 +1,13 @@
-//submitボタンを押すと「RESULT」から「処理中・・・」へボタンの文字が変わる
-//RESULTボタンをクリック後25秒経っても処理が終わらなければリトライボタンを表示して最後クリックさせて処理が成功するまで繰り返す
+// 最後の質問に回答して、formのsubmitが実行されるタイミングでLoading画面を差し込む
 $(function(){
+  // hideメソッドでloading画面の初期表示をしない
+  $('#loading').hide();
+  // submitボタンが実行されたタイミングで動作を起こしloading画面を表示する
   $('form').submit(function(e) {
-    $('#result_btn').val('処理中・・・'), setInterval(function() {
-      $('#result_btn').val('リトライ')
-    }, 25000);
+    // loading画面の表示インターバルを45秒として、45秒後は　loading画面を非表示にし、RESULTボタンの表示をリトライと変更する
+    $('#loading').show(), setInterval(function() {
+      $('#loading').hide();
+      $('#result_btn').val('リトライ');
+    }, 45000);
   });
 });
