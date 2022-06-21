@@ -11,6 +11,7 @@
         <h3><%= form.collection_select(:spa, @answers_17, :content, :content, {prompt: "どちらか選択してください"}, required: true) %></h3>
       <br>
         <%= form.submit 'RESULT', id: "result_btn", class: "btn btn-warning btn-lg w-75", data: {disable_with: false} %>
+        <!--submit後にLoading画面を差し込むためにidとclassを設定する-->
         <div id="loading">
           <div id="loading_box">
             <div class="loading-one animation_loading">

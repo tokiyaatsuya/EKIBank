@@ -6,7 +6,7 @@
   background-attachment: fixed;
   opacity: 1.0;
 }
-//
+// Loading画面エリア全体の設定
 #loading {
   position: fixed;
   top: 0;
@@ -17,6 +17,7 @@
   height: 100%;
   background: #999;
 }
+// 動きが表示されるLoading画面のBoxの中の設定
 #loading_box {
   position: absolute;
   top: 50%;
@@ -25,11 +26,13 @@
   width: 100%;
   text-align: center;
 }
+// Loading画面のBox内のtextが表示されるエリアの設定
 .loading-one {
   display: inline-block;
   border-top: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
 }
+// Loadingのtextの設定
 .loading-one p.loading-txt {
   color: #fff;
   font-size: 20px;
@@ -38,11 +41,7 @@
   padding: 2em 0;
   text-align: center;
 }
-
-/*==================
-.animation_loading
-==================*/
-
+// Loading画面の動き(アニメーション)の設定
 .animation_loading {
   animation: equalizer_loading 7000ms infinite;
   animation-iteration-count: 10;

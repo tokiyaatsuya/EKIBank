@@ -6,8 +6,8 @@ $(function(){
   $('form').submit(function(e) {
     // loading画面の表示インターバルを45秒として、45秒後は　loading画面を非表示にし、RESULTボタンの表示をリトライと変更する
     $('#loading').show(), setInterval(function() {
-      $('#loading').hide()
-      $('#result_btn').val('リトライ')
+      $('#loading').hide();
+      $('#result_btn').val('リトライ');
     }, 45000);
   });
 });
