@@ -3166,4 +3166,24 @@ class RentMarketPrice < ApplicationRecord
       record.save
     end
   end
+  # spa
+  def self.google_places_spa
+    # APIを扱うクラスのインスタンスを定義する
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    # RentMarketPriceテーブルの全レコードを取得する
+    records = RentMarketPrice.all
+    # records = RentMarketPrice.where(id: 5862..)
+    # レコードごとにループを回す
+    records.each do |record|
+      # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する
+      spa = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => '銭湯')
+      # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でspaカラムに保存する
+      if spa.present?
+        record.spa = "有り"
+      elsif !spa.present?
+        record.spa = "無し"
+      end
+      record.save
+    end
+  end
 end
