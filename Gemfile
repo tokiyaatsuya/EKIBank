@@ -73,3 +73,5 @@ gem 'google_places'
 gem 'byebug'
 # 検索機能
 gem 'ransack'
+# 開発環境のデータ書き出し
+gem 'seed_dump'
