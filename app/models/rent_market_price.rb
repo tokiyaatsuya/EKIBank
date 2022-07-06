@@ -2991,7 +2991,7 @@ class RentMarketPrice < ApplicationRecord
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でgymカラムに保存する
       if gyms.present?
         record.gym = "有り"
-      elsif !gyms.present?
+      else
         record.gym = "無し"
       end
       record.save
@@ -3011,7 +3011,7 @@ class RentMarketPrice < ApplicationRecord
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でstarbucks_coffeeカラムに保存する
       if starbucks_coffees.present?
         record.starbucks_coffee = "有り"
-      elsif !starbucks_coffees.present?
+      else
         record.starbucks_coffee = "無し"
       end
       record.save
@@ -3031,7 +3031,7 @@ class RentMarketPrice < ApplicationRecord
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でmcdonaldsカラムに保存する
       if mcdonalds.present?
         record.mcdonalds = "有り"
-      elsif !mcdonalds.present?
+      else
         record.mcdonalds = "無し"
       end
       record.save
@@ -3051,7 +3051,7 @@ class RentMarketPrice < ApplicationRecord
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"ohshoでカラムに保存する
       if ohsho.present?
         record.ohsho = "有り"
-      elsif !ohsho.present?
+      else
         record.ohsho = "無し"
       end
       record.save
@@ -3140,7 +3140,7 @@ class RentMarketPrice < ApplicationRecord
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でlarge_parkカラムに保存する
       if large_park.present?
         record.large_park = "有り"
-      elsif !large_park.present?
+      else
         record.large_park = "無し"
       end
       record.save
@@ -3160,7 +3160,7 @@ class RentMarketPrice < ApplicationRecord
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でlarge_parkカラムに保存する
       if library.present?
         record.library = "有り"
-      elsif !library.present?
+      else
         record.library = "無し"
       end
       record.save
@@ -3180,7 +3180,7 @@ class RentMarketPrice < ApplicationRecord
       # present?で真偽判定。結果が1以上あれば"有り"、0であれば"無し"でspaカラムに保存する
       if spa.present?
         record.spa = "有り"
-      elsif !spa.present?
+      else
         record.spa = "無し"
       end
       record.save
