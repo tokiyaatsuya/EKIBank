@@ -2927,7 +2927,7 @@ class RentMarketPrice < ApplicationRecord
   # test
   ###def self.gpa_test
   ###  client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
-  ###  infomations = client.spots_by_query("武蔵小山駅", :language => 'ja')
+  ###  infomations = client.spots_by_query("新橋駅", :language => 'ja')
   ###  infomations.select do |geocode|
   ###    @latitude = geocode.lat
   ###    @longitude = geocode.lng
@@ -3067,20 +3067,28 @@ class RentMarketPrice < ApplicationRecord
     # レコードごとにループを回す
     records.each do |record|
       # レコードに保存されている座標を代入して検索中の駅の半径200m以内の施設を検索する。今回は:detail => trueを追加して施設の詳細情報を取得する
-      supermarkets = client.spots(@latitude, @longitude, :radius => 200, :language => 'ja', :name => 'スーパーマーケット', :detail => true)
+      supermarkets = client.spots(record.geocode_latitude, record.geocode_longitude, :radius => 200, :language => 'ja', :name => 'スーパーマーケット', :detail => true)
       # そもそも検索範囲にスーパーがあるかないかを判定する
       if supermarkets.present?
-        # 最後の判定に使う空の配列を用意
+        # 最後の営業時間の判定に使う空の配列を用意
         closing_times =[]
         # 取得した複数のスーパーを一つずつループさせる
         supermarkets.each do |supermarket|
-          # スーパーごとの営業日・営業時間に関する要素を取得しopening_day_timesに格納する
-          opening_day_times = supermarket.opening_hours.values[1] # opening_day_timesはArrayクラス
-          # スーパーごとの営業日・営業時間に関する要素から曜日ごとの開店時間・閉店時間が一つになっている配列から曜日ごとの閉店時間をday_closing_timesへ格納する
-          opening_day_times.select do |day_time|
-            day_closing_times = day_time.values[0] # day_time.values[0]はHashクラス
-            # 単純な閉店時間だけの要素を空の配列closing_timesへ格納する
-            closing_times << day_closing_times.values[1] # day_closing_times.values[1]はStringクラス
+          # スーパーの詳細情報の返り値が複雑でvaluesが入っていたり、いなかったりするので、両方に対応できる判定文を記載する
+          if supermarket.opening_hours && supermarket.opening_hours.values.present?
+            # スーパーごとの営業日・営業時間に関する要素を取得しopening_day_timesに格納する
+            opening_day_times = supermarket.opening_hours.values[1] # opening_day_timesはArrayクラス
+            # スーパーごとの営業日・営業時間に関する要素から曜日ごとの開店時間・閉店時間が一つになっている配列から曜日ごとの閉店時間をday_closing_timesへ格納する
+            opening_day_times.select do |day_time|
+              day_closing_times = day_time.values[0] # day_time.values[0]はHashクラス
+              # もしday_closing_timesに値が格納されない場合もrecordには"無し"を保存する
+              if day_time.values[0].present?
+                # 単純な閉店時間だけの要素を空の配列closing_timesへ格納する
+                closing_times << day_closing_times.values[1] # day_closing_times.values[1]はStringクラス
+              elsif !day_time.values[0].present?
+                record.supermarket = "無し"
+              end
+            end
           end
         end
         # 取得されたスーパーごとの閉店時間要素の中で閉店時間が23:30,00:00,00:30,1:00,2:00,3:00の場合は"有り"、それ以外を"無し"としてレコードに保存する
