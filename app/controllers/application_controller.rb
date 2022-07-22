@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_action :basic_auth
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
@@ -27,7 +28,13 @@ class ApplicationController < ActionController::Base
   Q_19 = 19
 
   private
-          
+
+  def basic_auth
+    authenticate_or_request_with_http_basic do |username, password|
+      username == ENV['BASIC_AUTH_USER'] && password == ENV['BASIC_AUTH_PASSWORD']
+    end
+  end
+
   def sign_in_required
     redirect_to new_user_session_url unless user_signed_in?
   end
