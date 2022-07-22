@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  root 'pages#index'
-  get 'pages/show'
+  root 'pages#top_show'
   resources :questions do
     collection do
       get 'show_1'

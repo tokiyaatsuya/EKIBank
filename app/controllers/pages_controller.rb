@@ -1,9 +1,6 @@
 class PagesController < ApplicationController
-  before_action :sign_in_required, only: [:index]
-  
-  def index
-  end
+  before_action :sign_in_required, only: [:top_show]
 
-  def show
+  def top_show
   end
 end
